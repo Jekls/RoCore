@@ -148,6 +148,8 @@ struct boss_blood_councilAI : public ScriptedAI
      InvocationNumber = 0;
      pKeleseth->SetInCombatWithZone();
      pTaldaram->SetInCombatWithZone();
+     CAST_AI(boss_Keleseth_IccAI, pKeleseth->AI())->EnterCombat(who);
+     CAST_AI(boss_Taldaram_IccAI, pTaldaram->AI())->EnterCombat(who);
      }
 
          void KilledUnit(Unit *victim)
@@ -301,6 +303,8 @@ struct boss_Keleseth_IccAI : public ScriptedAI
      AuraCheck = 1000;
      pValanar->SetInCombatWithZone();
      pTaldaram->SetInCombatWithZone();
+     CAST_AI(boss_blood_councilAI, pValanar->AI())->EnterCombat(who);
+     CAST_AI(boss_Taldaram_IccAI, pTaldaram->AI())->EnterCombat(who);
      }
 
     void KilledUnit(Unit *victim)
@@ -407,6 +411,8 @@ struct boss_Taldaram_IccAI : public ScriptedAI
      AuraCheck = 1000;
      pValanar->SetInCombatWithZone();
      pKeleseth->SetInCombatWithZone();
+     CAST_AI(boss_blood_councilAI, pValanar->AI())->EnterCombat(who);
+     CAST_AI(boss_Keleseth_IccAI, pKeleseth->AI())->EnterCombat(who);
      }
 
     void JustSummoned(Creature* pSummoned)
