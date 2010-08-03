@@ -358,13 +358,13 @@ struct boss_sindragosaAI : public ScriptedAI
     }
 
     void TakeOff()
-    {
+    {      
         me->InterruptSpell(CURRENT_GENERIC_SPELL);
         me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
+        me->SetFlying(true);
         me->GetMotionMaster()->MovePoint(1, 4474.239746, 2484.243896, 231.0);
         me->SetReactState(REACT_PASSIVE);
         me->AttackStop();
-        me->SetFlying(true);
         DoScriptText(SAY_AIR_PHASE, me);
 
         m_uiPhaseTimer = 60000;
@@ -372,12 +372,10 @@ struct boss_sindragosaAI : public ScriptedAI
 
     void LandDown()
     {
-        //me->GetMotionMaster()->MovePoint(1, SpawnPosition);
         me->GetMotionMaster()->MoveTargetedHome();
         me->SetFlying(false);
         me->SetReactState(REACT_AGGRESSIVE);
         me->RemoveAllAuras();
-        //me->GetMotionMaster()->MoveChase(me->getVictim());
 
         m_uiPhaseTimer = 60000;
     }
