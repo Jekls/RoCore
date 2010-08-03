@@ -465,7 +465,7 @@ struct npc_gas_cloudAI : public ScriptedAI
             if (me->IsWithinDistInMap(me, 3.00f))
             {
                 Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
-                !pTarget->HasAura(SPELL_GASEOUS_BLOAT);
+                if (!pTarget->HasAura(SPELL_GASEOUS_BLOAT))
                 DoCast(SPELL_EXPUNGED_GAS);
                 GasTimer = 1000;
                 me->ForcedDespawn();
@@ -523,13 +523,13 @@ struct npc_puddle_oozeAI : public ScriptedAI
 	GrowStack = 3;
         me->SetReactState(REACT_PASSIVE);
         me->SetSpeed(MOVE_WALK, 0.1f, true);
-	me->GetAura(SPELL_GROW, 0)->GetStackAmount() = GrowStack;
+        for (uint32 i = 0; i < 3; ++i)
+		DoCast(me, SPELL_GROW);
+	//me->GetAura(SPELL_GROW, 0)->GetStackAmount() = GrowStack;
 	me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*4);
         m_uiPuddleOozeTimer = 5000;
         if (!me->HasAura(SPELL_ROOT))
         DoCast(me, SPELL_ROOT);
-        for (uint32 i = 0; i < 3; ++i)
-		DoCast(me, SPELL_GROW);
     }
     void UpdateAI(const uint32 uiDiff)
     {
@@ -537,10 +537,10 @@ struct npc_puddle_oozeAI : public ScriptedAI
         {
 			DoCast(SPELL_GROW);
 			GrowStack++;
-			m_uiPuddleOozeTimer = 2000;
+			m_uiPuddleOozeTimer = 3500;
         } else m_uiPuddleOozeTimer -= uiDiff;
 
-		if (me->GetAura(SPELL_GROW, 0)->GetStackAmount() == 1)
+		if (me->GetAura(SPELL_GROW, 0)->GetStackAmount() <= 1)
 			me->ForcedDespawn();
 
     }
