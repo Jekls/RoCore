@@ -135,6 +135,7 @@ BattleGround::BattleGround()
     m_Status            = STATUS_NONE;
     m_ClientInstanceID  = 0;
     m_EndTime           = 0;
+    m_ArenaTimeLimit    = 0;
     m_LastResurrectTime = 0;
     m_BracketId         = BG_BRACKET_ID_FIRST;
     m_InvitedAlliance   = 0;
@@ -425,7 +426,7 @@ void BattleGround::Update(uint32 diff)
             if (isArena())
             {
                 //TODO : add arena sound PlaySoundToAll(SOUND_ARENA_START);
-
+                m_ArenaTimeLimit = ARENA_TIME_LIMIT*IN_MILLISECONDS; // There is a 45 minute time limit for Arena matches.
                 for (BattleGroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end(); ++itr)
                     if (Player *plr = objmgr.GetPlayer(itr->first))
                     {
@@ -486,6 +487,21 @@ void BattleGround::Update(uint32 diff)
                 RemovePlayerAtLeave(itr->first, true, true);// remove player from BG
                 // do not change any battleground's private variables
             }
+        }
+    }
+
+    /*********************************************************/
+    /***                ARENA TIME LIMIT                   ***/
+    /*********************************************************/
+
+    if (isArena() && GetStatus() == STATUS_IN_PROGRESS)
+    {
+        m_ArenaTimeLimit -= diff;
+        if (m_ArenaTimeLimit <= 0)
+        {
+            m_ArenaTimeLimit = 0;
+            // no winners
+            EndBattleGround(NULL);
         }
     }
 
