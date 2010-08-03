@@ -224,7 +224,7 @@ struct boss_halionAI : public ScriptedAI
 			
 			if (m_uiFlameBreathTimer <= diff)
 			{
-				DoCast(me, SPELL_FLAMEBREATH);
+				DoCast(me, RAID_MODE(SPELL_FLAMEBREATH, SPELL_FLAMEBREATH, SPELL_FLAMEBREATH_H, SPELL_FLAMEBREATH_H));
 				m_uiFlameBreathTimer = 20000;
 			} else m_uiFlameBreathTimer -= diff;
 			
@@ -414,7 +414,7 @@ struct boss_twilight_halionAI : public ScriptedAI
 			
 			if (m_uiDarkBreathTimer <= diff)
 			{
-				DoCast(me, SPELL_DARKBREATH);
+				DoCast(me, RAID_MODE(SPELL_DARKBREATH, SPELL_DARKBREATH, SPELL_DARKBREATH_H, SPELL_DARKBREATH_H));
 				m_uiDarkBreathTimer = 20000;
 			} else m_uiDarkBreathTimer -= diff;
 			
