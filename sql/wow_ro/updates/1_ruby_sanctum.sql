@@ -1,5 +1,9 @@
 -- Script Texts
-REPLACE INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3`, `sound`, `type`, `language`) VALUES
+DELETE FROM script_texts where `entry` <= -1752008 AND `entry` >= -1752016;
+DELETE FROM script_texts where `entry` <= -1752001 AND `entry` >= -1752006;
+DELETE FROM script_texts where `entry` <= -1752017 AND `entry` >= -1752036;
+
+INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3`, `sound`, `type`, `language`) VALUES
 ('-1752008', '', '0', 'Help I''m caught in that tree! Help me!', '17490', '1', '0'),	 	
 ('-1752009', '', '0', 'Thank you', '17491', '1', '0'),	 	
 ('-1752010', '', '0', 'We believed the Sanctum is well appreciated but this type of attack we were not prepared ...', '17492', '0', '0'),	 	
@@ -29,16 +33,16 @@ REPLACE INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc
 ( -1752025, "Hhrr...Grr..", 0, "HHrr...Grr..", 17531, 1, 0),
 ( -1752026, "Burn in the master's flame!", 0, "Brennt in der Flamme des Meisters!", 17532, 1, 0),
 
-(-1752027, 'Insects! You''re too late. The Ruby Sanctum is lost.',null,null,null,null,null,null,null,null,17499,1,0,0,'');
-(-1752028, 'Your world teeters on the brink of annihilation. You will ALL bear witness to the coming of a new age of DESTRUCTION!',null,null,null,null,null,null,null,null,17500,1,0,0,'');
-(-1752029, 'Another hero falls.',null,null,null,null,null,null,null,null,17501,1,0,0,'');
-(-1752030, 'Hahahahaha.',null,null,null,null,null,null,null,null,17502,1,0,0,'');
-(-1752031, 'Relish this victory, mortals, for it will be your last! This world will burn with the master''s return!',null,null,null,null,null,null,null,null,17503,1,0,0,'');
-(-1752032, 'Not good enough.',null,null,null,null,null,null,null,null,17504,1,0,0,'');
-(-1752033, 'The heavens burn!',null,null,null,null,null,null,null,null,17505,1,0,0,'');
-(-1752034, 'Beware the shadow!',null,null,null,null,null,null,null,null,17506,1,0,0,'');
-(-1752035, 'You will find only suffering within the realm of twilight! Enter if you dare!',null,null,null,null,null,null,null,null,17507,1,0,0,'');
-(-1752036, 'I am the light and the darkness! Cower, mortals, before the herald of Deathwing!',null,null,null,null,null,null,null,null,17508,1,0,0,'');
+(-1752027, 'Insects! You''re too late. The Ruby Sanctum is lost.',NULL,NULL,17499,0,0),
+(-1752028, 'Your world teeters on the brink of annihilation. You will ALL bear witness to the coming of a new age of DESTRUCTION!',NULL,NULL,17500,0,0),
+(-1752029, 'Another hero falls.',NULL,NULL,17501,0,0),
+(-1752030, 'Hahahahaha.',NULL,NULL,17502,0,0),
+(-1752031, 'Relish this victory, mortals, for it will be your last! This world will burn with the master''s return!',NULL,NULL,17503,0,0),
+(-1752032, 'Not good enough.',NULL,NULL,17504,0,0),
+(-1752033, 'The heavens burn!',NULL,NULL,17505,0,0),
+(-1752034, 'Beware the shadow!',NULL,NULL,17506,0,0),
+(-1752035, 'You will find only suffering within the realm of twilight! Enter if you dare!',NULL,NULL,17507,0,0),
+(-1752036, 'I am the light and the darkness! Cower, mortals, before the herald of Deathwing!',NULL,NULL,17508,0,0);
 
 -- Scriptnames
 UPDATE `instance_template` SET `script`='instance_ruby_sanctum' WHERE (`map`='724');

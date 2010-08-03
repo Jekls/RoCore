@@ -94,9 +94,18 @@ UPDATE `creature_template` SET `ScriptName`='creature_impale' WHERE (`entry`='29
 UPDATE `creature_template` SET `ScriptName`='cr_dark_essence' WHERE (`entry`='34567');
 UPDATE `creature_template` SET `ScriptName`='cr_light_essence' WHERE (`entry`='34568');
 
+DELETE FROM script_texts where `entry` <= -1600205 AND `entry` >= -1600224;
+DELETE FROM script_texts where `entry`='-1600229';
+DELETE FROM script_texts where `entry` <= -1600234 AND `entry` >= -1600237;
+DELETE FROM script_texts where `entry` <= -1600239 AND `entry` >= -1600244;
+DELETE FROM script_texts where `entry` <= -1600246 AND `entry` >= -1600250;
+DELETE FROM script_texts where `entry` <= -1600252 AND `entry` >= -1600258;
+DELETE FROM script_texts where `entry` <= -1713554 AND `entry` >= -1713561;
+
+
 INSERT INTO `script_texts` VALUES ('0', '-1600205', 'Welcome champions, you have heard the call of the Argent Crusade, and you have boldly answered. It is here, in the Crusader\'s Coliseum, that you will face your greatest challenges. Those of you, who survive the rigors of the coliseum will join the Argent Crusade on it\'s march to Icecrown Citadel.', null, null, 'Willkommen, Champions! Ihr habt den Ruf des Argentumkreuzzugs vernommen und seid ihm mutig gefolgt! Hier, im Kolosseum der Kreuzfahrer, werdet Ihr auf Eure gr��ten Herausforderungen treffen.Die jenigen unter Euch, welche die Gefahren des Kolosseums �berleben, werden den Kreuzzug bei seinem Marsch auf die Eiskronenzitadelle begleiten.', null, null, null, null, null, '16036', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600206', 'Hailing from the deepest, darkest carverns of the storm peaks, Gormok the Impaler! Battle on, heroes!', null, null, 'Er kommt aus den tiefsten, dunkelsten H�hlen der Sturmgifpel - Gormok der Pf�hler! Voran, Helden!', null, null, null, null, null, '16038', '1', '0', '0', null);
-REPLACE INTO `script_texts` VALUES ('0', '-1600207', 'Let the games begin!', '', null, 'Lasst die Spiele beginnen.', null, null, null, null, null, '16037', '1', '0', '0', null);
+INSERT INTO `script_texts` VALUES ('0', '-1600207', 'Let the games begin!', '', null, 'Lasst die Spiele beginnen.', null, null, null, null, null, '16037', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600208', ' I have seen more worthy challenges in the ring of blood, you waste our time paladin!', null, null, 'Im Ring des Blutes habe ich w�rdigere K�mpfer gesehen. Ihr verschwendet unsere Zeit, Paladin!', null, null, null, null, null, '16026', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600209', 'Steel yourselves, heroes, for the twin terrors Acidmaw and Dreadscale. Enter the arena!', null, null, 'Stellt euch Helden, den die Zwillingsschrecken �tschlund und Schreckensmaul erscheinen in der Arena.', null, null, null, null, null, '16039', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('0', '-1600210', 'The air freezes with the introduction of our next combatant, Icehowl! Kill or be killed, champions!', null, null, 'Mit der Ank�ndigung unseres n�chsten K�mpers gefriert die Luft selbst: Eisheuler! T�tet oder werdet get�tet, Champions!', null, null, null, null, null, '16040', '1', '0', '0', null);
