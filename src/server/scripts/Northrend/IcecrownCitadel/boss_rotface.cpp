@@ -314,6 +314,8 @@ struct boss_rotfaceAI : public ScriptedAI
                     if (little2) //and second ooze is little, despawn both and summon big ooze
                     {
                         DoSummon(CREATURE_OOZE_BIG, (*ooze));
+                        ooze->ForcedDespawn;
+                        ooze2->ForcedDespawn;
                         break;
                     }
                     else
