@@ -162,9 +162,11 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
         if (all == RAID_MODE(3,5,3,5))
 		{
             for (uint8 i = 1; i < darkfallened; ++i)
-				Darkfallen[i]->RemoveAurasDueToSpell(SPELL_PACT_OF_DARKFALLEN);
+		{
+                   Darkfallen[i]->RemoveAurasDueToSpell(SPELL_PACT_OF_DARKFALLEN);
+                   Darkfallen[i] = NULL;
+                }
             darkfallened = 0;
-			Darkfallen.clear();
         }
     }
 
