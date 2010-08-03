@@ -202,15 +202,15 @@ struct boss_saurfangAI : public ScriptedAI
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
                 DoCast(pTarget, SPELL_RUNE_OF_BLOOD_TRIGGER);
-                me->ModifyPower(Saurfang->GetPowerType(), +1);
+                me->ModifyPower(me->GetPowerType(), +1);
             m_uiRuneOfBloodTimer2 = 60000;
         } else m_uiRuneOfBloodTimer2 -= uiDiff;
 
         if (m_uiBoilingBloodTimer < uiDiff)
         {
-            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))SPELL_RUNE_OF_BLOOD_TRIGGER
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_BOILING_BLOOD_10_NORMAL);
-                me->ModifyPower(Saurfang->GetPowerType(), +1);
+                me->ModifyPower(me->GetPowerType(), +1);
             m_uiBoilingBloodTimer = 20000;
         } else m_uiBoilingBloodTimer -= uiDiff;
 
@@ -222,7 +222,7 @@ struct boss_saurfangAI : public ScriptedAI
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
                 DoCast(pTarget, RAID_MODE(SPELL_BLOOD_NOVA_10_NORMAL,SPELL_BLOOD_NOVA_25_NORMAL,SPELL_BLOOD_NOVA_10_HEROIC,SPELL_BLOOD_NOVA_25_HEROIC));
-                ModifyPower(Saurfang->GetPowerType(), +1);
+                me->ModifyPower(me->GetPowerType(), +1);
                 m_uiBloodNovaTimer = 23000;
             }
         } else m_uiBloodNovaTimer -= uiDiff;
@@ -254,7 +254,7 @@ struct boss_saurfangAI : public ScriptedAI
             Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
             DoCast(pTarget, RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC));
             me->ModifyHealth(me->GetMaxHealth() * 0.01);
-            me->ModifyPower(Saurfang->GetPowerType(), +2);
+            me->ModifyPower(me->GetPowerType(), +2);
             m_uiRuneOfBloodTimer = 40000;
             m_uiRuneOfBloodTimer2 = 5000;
         } else m_uiRuneOfBloodTimer -= uiDiff;
