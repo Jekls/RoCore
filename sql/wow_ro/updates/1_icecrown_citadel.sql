@@ -406,27 +406,12 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_spinestalker' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'npc_ice_tomb' WHERE `entry` = '36980';
 UPDATE `creature_template` SET `ScriptName` = 'npc_frost_bomb' WHERE `entry` = '37186';
 UPDATE `creature_template` SET `ScriptName` = 'lanathel_intro' WHERE `entry` = '38004';
-UPDATE `creature_template` SET `ScriptName` = 'Boss_Raid_Anubarak' WHERE `entry`='34564';
-UPDATE `creature_template` SET `ScriptName` = 'Mob_NerubianTrigger' WHERE `entry`='34862';
-UPDATE `creature_template` SET `ScriptName` = 'mob_swarm_scarab' WHERE `entry`='34605';
-UPDATE `creature_template` SET `ScriptName` = 'nerubian_burrower' WHERE `entry`='34607';
-UPDATE `creature_template` SET `ScriptName` = 'frost_sphere' WHERE `entry`='34606';
-UPDATE `creature_template` SET `ScriptName` = 'creature_impale' WHERE `entry`='29184';
-UPDATE `creature_template` SET `ScriptName` = 'cr_dark_essence' WHERE `entry`= '34567';
-UPDATE `creature_template` SET `ScriptName` = 'cr_light_essence' WHERE `entry`= '34568';
 UPDATE `creature_template` SET `ScriptName` = 'npc_puddle_ooze' WHERE `entry` = '37690';
 UPDATE `creature_template` SET `ScriptName` = 'npc_malleable_goo' WHERE `entry` = '38556';
 UPDATE `creature_template` SET `ScriptName` = 'npc_abomination' WHERE `entry` = '37672';
 
 UPDATE `creature_template` SET `ScriptName` = 'npc_sister_svalna' WHERE `entry` = '37126';
 UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
-
-UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry` = '39863';
-UPDATE `creature_template` SET `ScriptName` = 'boss_twilight_halion' WHERE `entry` = '40142';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` = '40055';
-UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';
-UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
 
 INSERT INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
 INSERT INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
