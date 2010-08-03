@@ -45,6 +45,7 @@ enum Yells
 enum SaurfangSpells
 {
     SPELL_BLOOD_LINK              = 72178,
+    SPELL_BLOOD_LINK_PROC         = 72195,
     SPELL_BLOOD_POWER             = 72371,
     SPELL_SUMMON_BLOOD_BEAST_1    = 72172,
     SPELL_SUMMON_BLOOD_BEAST_2    = 72173,
@@ -202,7 +203,7 @@ struct boss_saurfangAI : public ScriptedAI
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
                 DoCast(pTarget, SPELL_RUNE_OF_BLOOD_TRIGGER);
-                me->ModifyPower(me->getPowerType(), +1);
+                me->ModifyPower(me->getPowerType(), +2);
             m_uiRuneOfBloodTimer2 = 60000;
         } else m_uiRuneOfBloodTimer2 -= uiDiff;
 
@@ -210,7 +211,7 @@ struct boss_saurfangAI : public ScriptedAI
         {
             if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_BOILING_BLOOD_10_NORMAL);
-                me->ModifyPower(me->getPowerType(), +1);
+                me->ModifyPower(me->getPowerType(), +2);
             m_uiBoilingBloodTimer = 20000;
         } else m_uiBoilingBloodTimer -= uiDiff;
 
@@ -333,7 +334,8 @@ struct npc_bloodbeastAI : public ScriptedAI
                 DoCast(me, SPELL_SCENT_OF_BLOOD);
                 ScentOfBlood = true;
                 m_uiScentOfBloodTimer = 9000;
-//                pSaurfang->ModifyPower(pSaurfang->getPowerType(POWER_BLOOD_POWER), +1);
+                pSaurfang->ModifyPower(pSaurfang->getPowerType(), +1);
+                pSaurfang->CastSpell(pSaurfang, SPELL_BLOOD_LINK_PROC);
             }
         } else m_uiScentOfBloodTimer -= uiDiff;
      }
