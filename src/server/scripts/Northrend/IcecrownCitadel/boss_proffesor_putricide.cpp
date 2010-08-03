@@ -47,6 +47,7 @@ enum ProfessorSpells
     SPELL_GUZZLE_POTIONS          = 71893,
     SPELL_MUTATED_STRENGTH        = 71603,
     SPELL_MUTATED_PLAGUE          = 72672,
+    SPELL_SLIME_VIAL              = 70341,
     SPELL_OOZE_THROW              = 70342, // is triggered spell - SPELL_SUMMON_PUDDLE
     SPELL_ROOT                    = 42716,
 //
@@ -82,7 +83,7 @@ enum ProfessorSpells
 //
     SPELL_SLIME_PUDDLE            = 70343,
     SPELL_SLIME_PUDDLE_AURA       = 70346,
-	SPELL_GROW                    = 70347,
+    SPELL_GROW                    = 70347,
 
     SPELL_BERSERK                 = 47008,
 //
@@ -139,6 +140,7 @@ struct boss_professor_putricideAI : public ScriptedAI
         m_uiPhase = 1;
         m_uiUnstableExperimentTimer = 10000;
         m_uiAddSpawnTimer = 60000;
+        m_uiPuddleTimer = 14000;
         m_bIsPhase1 = false;
         m_bIsPhase2 = false;
 
@@ -183,6 +185,13 @@ struct boss_professor_putricideAI : public ScriptedAI
     {
         if (!UpdateVictim())
             return;
+
+            if (m_uiPuddleTimer < uiDiff)
+            {
+                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                DoCast(pTarget, SPELL_SLIME_VIAL);
+                m_uiPuddleTimer = 31000;
+            } else m_uiPuddleTimer -= uiDiff;
 
         if (m_uiUnstableExperimentTimer < uiDiff)
         {
@@ -272,6 +281,13 @@ struct boss_professor_putricideAI : public ScriptedAI
                     m_uiGooTimer = 37000;
             } else m_uiGooTimer -= uiDiff;
 
+            if (m_uiPuddleTimer < uiDiff)
+            {
+                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                DoCast(pTarget, SPELL_SLIME_VIAL);
+                m_uiPuddleTimer = 28000;
+            } else m_uiPuddleTimer -= uiDiff;
+
     if (HealthBelowPct(35) && !m_bIsPhase2)
         {
                 DoScriptText(SAY_TRANSFORM_2, me);
@@ -289,7 +305,7 @@ struct boss_professor_putricideAI : public ScriptedAI
             if (m_uiPuddleTimer < uiDiff)
             {
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                me->SummonCreature(SUMMON_OOZE_PUDDLE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1200000);
+                me->SummonCreature(SUMMON_OOZE_PUDDLE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 1200000);
                 m_uiPuddleTimer = 4000;
             } else m_uiPuddleTimer -= uiDiff;
 
@@ -336,6 +352,8 @@ struct npc_volatile_oozeAI : public ScriptedAI
     void Reset()
     {
         TargetGUID = 0;
+        me->SetSpeed(MOVE_WALK, 0.4f, true);
+        me->SetSpeed(MOVE_RUN, 0.4f, true);
         OozeAdhesivTimer = 7000;
         OozeExplosionTimer = 5000;
         MovechaseTimer = 2000;
@@ -407,6 +425,8 @@ struct npc_gas_cloudAI : public ScriptedAI
     void Reset()
     {
         TargetGUID = 0;
+        me->SetSpeed(MOVE_WALK, 0.4f, true);
+        me->SetSpeed(MOVE_RUN, 0.4f, true);
         GasTimer = 7000;
         BloatTimer = 1000;
         Move2chaseTimer = 2000;
@@ -500,17 +520,16 @@ struct npc_puddle_oozeAI : public ScriptedAI
 
     void Reset()
     {
-		GrowStack = 3;
-		CheckStack = 2;
+	GrowStack = 3;
         me->SetReactState(REACT_PASSIVE);
         me->SetSpeed(MOVE_WALK, 0.1f, true);
-		me->GetAura(SPELL_GROW, 0)->GetStackAmount() == GrowStack;
-		me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*4);
+	me->GetAura(SPELL_GROW, 0)->GetStackAmount() = GrowStack;
+	me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*4);
         m_uiPuddleOozeTimer = 5000;
         if (!me->HasAura(SPELL_ROOT))
         DoCast(me, SPELL_ROOT);
         for (uint32 i = 0; i < 3; ++i)
-			DoCast(me, SPELL_GROW);
+		DoCast(me, SPELL_GROW);
     }
     void UpdateAI(const uint32 uiDiff)
     {
