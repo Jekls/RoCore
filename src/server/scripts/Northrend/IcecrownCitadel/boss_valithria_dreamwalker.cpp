@@ -29,9 +29,9 @@ enum Yells
     SAY_END                       = -1666070,
     SAY_BERSERK                   = -1666069,
     SAY_OPEN_PORTAL               = -1666064,
-	SVALNA_AGGRO 				  = -2500014,
-	SVALNA_SLAY 				  = -2500015,
-	SVALNA_DEATH 				  = -2500017,
+	SVALNA_AGGRO 				  = -1900004,
+	SVALNA_SLAY 				  = -1900005,
+	SVALNA_DEATH 				  = -1900007,
 };
 
 enum Spells
