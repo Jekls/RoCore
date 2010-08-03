@@ -311,7 +311,7 @@ struct npc_bloodbeastAI : public ScriptedAI
     {
         if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
-            Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.01);
+            Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.02);
             Saurfang->ModifyPower(Saurfang->getPowerType(), +10);
         }
     }
@@ -335,7 +335,7 @@ struct npc_bloodbeastAI : public ScriptedAI
                 ScentOfBlood = true;
                 m_uiScentOfBloodTimer = 9000;
                 pSaurfang->ModifyPower(pSaurfang->getPowerType(), +1);
-                pSaurfang->CastSpell(pSaurfang, SPELL_BLOOD_LINK_PROC);
+                pSaurfang->CastSpell(pSaurfang, SPELL_BLOOD_LINK_PROC, true);
             }
         } else m_uiScentOfBloodTimer -= uiDiff;
      }
