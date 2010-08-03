@@ -52,7 +52,8 @@ enum Spells
     SPELL_OOZE_FLOOD_2         = 69788,
     SPELL_ROOT                 = 42716,
     SPELL_SLIME_SPRAY          = 69508,
-    SPELL_MUTATED_INFECTION    = 71224,
+    SPELL_MUTATED_INFECTION_N  = 71224,
+    SPELL_MUTATED_INFECTION_H  = 73022,
     SPELL_SUMMON_LITTLE_OOZE   = 69706,
     SPELL_SUMMON_BIG_OOZE      = 69540,
     SPELL_BERSERK              = 47008,
@@ -221,9 +222,10 @@ struct boss_rotfaceAI : public ScriptedAI
         if (m_uiMutatedInfectionTimer <= diff)
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(pTarget && !pTarget->HasAura(SPELL_MUTATED_INFECTION))
+            if(pTarget && !pTarget->HasAura(RAID_MODE(SPELL_MUTATED_INFECTION_N, SPELL_MUTATED_INFECTION_N, SPELL_MUTATED_INFECTION_H, SPELL_MUTATED_INFECTION_H)))
             {
-                me->CastCustomSpell(SPELL_MUTATED_INFECTION, SPELLVALUE_MAX_TARGETS, 1);
+                //me->CastCustomSpell(SPELL_MUTATED_INFECTION, SPELLVALUE_MAX_TARGETS, 1);
+                me->AddAura(RAID_MODE(SPELL_MUTATED_INFECTION_N, SPELL_MUTATED_INFECTION_N, SPELL_MUTATED_INFECTION_H, SPELL_MUTATED_INFECTION_H), pTarget);
             }
             m_uiMutatedInfectionTimer = 30000;
         } else m_uiMutatedInfectionTimer -= diff;
@@ -314,8 +316,8 @@ struct boss_rotfaceAI : public ScriptedAI
                     if (little2) //and second ooze is little, despawn both and summon big ooze
                     {
                         DoSummon(CREATURE_OOZE_BIG, (*ooze));
-                        ooze->ForcedDespawn;
-                        ooze2->ForcedDespawn;
+                        ooze->ForcedDespawn();
+                        ooze2->ForcedDespawn();
                         break;
                     }
                     else
