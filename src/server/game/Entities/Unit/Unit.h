@@ -1944,6 +1944,7 @@ class Unit : public WorldObject
 
         void OutDebugInfo() const;
         virtual bool isBeingLoaded() const { return false;}
+        bool IsDuringRemoveFromWorld() const {return m_duringRemoveFromWorld;}
 
         Pet* ToPet(){ if (isPet()) return reinterpret_cast<Pet*>(this); else return NULL; }
         Totem* ToTotem(){ if (isTotem()) return reinterpret_cast<Totem*>(this); else return NULL; }
@@ -2061,7 +2062,8 @@ class Unit : public WorldObject
         uint32 m_reducedThreatPercent;
         uint64 m_misdirectionTargetGUID;
 
-        bool m_cleanupDone;
+        bool m_cleanupDone; // lock made to not add stuff after cleanup before delete
+        bool m_duringRemoveFromWorld; // lock made to not add stuff after begining removing from world
 };
 
 namespace Trinity
