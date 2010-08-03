@@ -719,6 +719,8 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                     }
 
                 }
+                else if (m_spellInfo->ID == 53508)
+                    damage *= m_caster->getLevel();
                 break;
             }
             case SPELLFAMILY_PALADIN:
