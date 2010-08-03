@@ -52,7 +52,7 @@ enum Spells
     SPELL_OOZE_FLOOD_2         = 69788,
     SPELL_ROOT                 = 42716,
     SPELL_SLIME_SPRAY          = 69508,
-    SPELL_MUTATED_INFECTION    = 71224,
+    SPELL_MUTATED_INFECTION    = RAID_MODE(71224,71224,73022,73022),
     SPELL_SUMMON_LITTLE_OOZE   = 69706,
     SPELL_SUMMON_BIG_OOZE      = 69540,
     SPELL_BERSERK              = 47008,
@@ -223,7 +223,8 @@ struct boss_rotfaceAI : public ScriptedAI
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if(pTarget && !pTarget->HasAura(SPELL_MUTATED_INFECTION))
             {
-                me->CastCustomSpell(SPELL_MUTATED_INFECTION, SPELLVALUE_MAX_TARGETS, 1);
+                //me->CastCustomSpell(SPELL_MUTATED_INFECTION, SPELLVALUE_MAX_TARGETS, 1);
+                pTarget->ApplyAura(SPELL_MUTATED_INFECTION);
             }
             m_uiMutatedInfectionTimer = 30000;
         } else m_uiMutatedInfectionTimer -= diff;
