@@ -311,7 +311,7 @@ struct npc_bloodbeastAI : public ScriptedAI
         if (Creature* Saurfang = me->GetCreature(*me, m_pInstance->GetData64(DATA_SAURFANG)))
         {
             Saurfang->ModifyHealth(Saurfang->GetMaxHealth() * 0.01);
-            me->ModifyPower(me->GetPower(POWER_BLOOD_POWER), +2);
+            Saurfang->ModifyPower(Saurfang->getPowerType(), +10);
         }
     }
 
