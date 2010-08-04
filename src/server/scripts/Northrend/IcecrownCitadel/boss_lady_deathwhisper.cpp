@@ -78,6 +78,7 @@ enum Yells
     SAY_KILL_2             =    -1665918,
     SAY_BERSERK            =    -1665915,
     SAY_DEATH              =    -1665916,
+    SAY_DOMINATE_MIND      =    -1665914,
 };
 
 struct boss_lady_deathwisperAI : public ScriptedAI
@@ -162,7 +163,7 @@ struct boss_lady_deathwisperAI : public ScriptedAI
             DoScriptText(SAY_KILL_1,me);
             break;
         case 1:
-            DoScriptText(SAY_KILL_1,me);
+            DoScriptText(SAY_KILL_2,me);
             break;
         }
     }
@@ -327,6 +328,7 @@ struct boss_lady_deathwisperAI : public ScriptedAI
                 if (pTarget && !pTarget->HasAura(71289))
                 {
                     DoCast(pTarget, SPELL_DOMINATE_MIND);
+                    DoScriptText(SAY_DOMINATE_MIND, me);
                 }
             }
             m_uiDominateMindTimer = 12000;
