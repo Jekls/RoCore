@@ -15,6 +15,9 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
+
+// Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro based on Bolvor's work (if you use this script, do not remove this seal, no matter what other modification you apply to script).
+
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
@@ -711,4 +714,3 @@ void AddSC_boss_professor_putricide()
     NewScript->GetAI = &GetAI_npc_gas_cloud;
     NewScript->RegisterSelf();
 };
-// Scripted by Lavi & Andu - WoW-Romania Team (if you use this script, do not remove this seal, no matter what other modification you apply to script.)

@@ -16,10 +16,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-/*
-Complete: 70%
-Created by Lordronn
-*/
+// Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro based on Bolvor's work (if you use this script, do not remove this seal, no matter what other modification you apply to script).
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
