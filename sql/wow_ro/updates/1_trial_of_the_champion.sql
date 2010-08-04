@@ -571,7 +571,3 @@ INSERT INTO `gameobject_loot_template` VALUES
 (27414, 47248, 16.666, 1, 1, 1, 1),
 (27414, 47249, 16.666, 1, 1, 1, 1),
 (27414, 47250, 16.666, 1, 1, 1, 1);
-
-
--- Acceso a la estancia
-UPDATE `access_requirement` SET `level_min`=80, `heroic_level_min`=80 WHERE `id`= 5503;

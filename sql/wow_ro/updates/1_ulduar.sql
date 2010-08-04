@@ -102,11 +102,6 @@ UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `ScriptName` 
 UPDATE `creature_template` SET `ScriptName` = 'mob_left_arm' WHERE `entry` = 32933;
 UPDATE `creature_template` SET `ScriptName` = 'mob_right_arm' WHERE `entry` = 32934;
 
-/*
--- 8117_ignis_heat
-DELETE FROM spell_script_target WHERE entry = 62343;
-INSERT INTO spell_script_target VALUES (62343, 1, 33121);
-*/
 UPDATE `creature_template` SET `unit_flags` = 33947654 WHERE `entry` = 33121;
 
 -- 8119_assembly_iron
