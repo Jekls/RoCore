@@ -295,18 +295,24 @@ struct boss_rotfaceAI : public ScriptedAI
                         if (stack1 < stack2)
                         {
                             ooze2->CastSpell(ooze, SPELL_UNSTABLE_OOZE, false);
-
+                            ooze->ForcedDespawn();
                             if (ooze2->GetAura(SPELL_UNSTABLE_OOZE) && ooze2->GetAura(SPELL_UNSTABLE_OOZE)->GetStackAmount() >= 5)
-                                ooze2->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                                {
+                                 ooze2->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                                 ooze2->ForcedDespawn();
+                                }
 
                             break;
                         }
                         else
                         {
                             ooze->CastSpell(ooze, SPELL_UNSTABLE_OOZE, false);
-
+                            ooze2->ForcedDespawn();
                             if (ooze->GetAura(SPELL_UNSTABLE_OOZE) && ooze->GetAura(SPELL_UNSTABLE_OOZE)->GetStackAmount() >= 5)
-                                ooze->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                                {
+                                 ooze->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                                 ooze->ForcedDespawn();
+                                }
                             continue;
                         }
                     }
@@ -323,9 +329,12 @@ struct boss_rotfaceAI : public ScriptedAI
                     else
                     {
                         ooze2->CastSpell(ooze, SPELL_UNSTABLE_OOZE, false);
-
+                        ooze->ForcedDespawn();
                         if (ooze2->GetAura(SPELL_UNSTABLE_OOZE) && ooze2->GetAura(SPELL_UNSTABLE_OOZE)->GetStackAmount() >= 5)
-                            ooze2->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                            {
+                             ooze2->CastSpell(ooze2->getVictim(), SPELL_UNSTABLE_EXPLOSION, true);
+                             ooze2->ForcedDespawn();
+                            }
                         break;
                     }
                 }
