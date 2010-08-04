@@ -83,13 +83,6 @@ UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='380
 # Other
 UPDATE `creature_template` SET `faction_A` = '35', `faction_H` = '35', `unit_flags` = '8', `type_flags` = '67113038' WHERE `entry` IN(36789,10067,10068,10069);
 
--- Fix crash until get properly fixed
-UPDATE `creature_template` SET `VehicleId` = 0 WHERE `entry` IN (37813,13106,13107,13108);
--- UPDATE `creature_template` SET `VehicleId` = 639 WHERE `entry` IN (37813,13106,13107,13108);
-
-UPDATE `creature_template` SET `vehicleId` = 0 WHERE `entry` = 36609;
--- UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` = 36609;
-
 # Instance
 UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE (`map`='631');
 
@@ -377,20 +370,22 @@ REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_ent
 REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`,  `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES (38068, 0, 0, 0, 0, 0, 169, 11686, 169, 0, 'Mana Void', '', '', 0, 80, 80, 0, 16, 16, 0, 1, 0, 307, 459, 0, 115, 1, 2000, 2000, 1, 0, 8, 0, 0, 0, 0, 0, 246, 367, 92, 10, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71085, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 10, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100677675, 0, 'npc_manavoid_icc');
 
 DELETE FROM spell_linked_spell where `spell_trigger`='-69290' AND `spell_effect`='72103';
-INSERT INTO spell_linked_spell VALUES (-69290, 72103, 0, 'Festergut: Spores end => Inoculated');
+REPLACE INTO spell_linked_spell VALUES (-69290, 72103, 0, 'Festergut: Spores end => Inoculated');
 
 
--- DELETE FROM spell_linked_spell where `spell_trigger` IN (`70157','-71224','-69783','69785','71340','-70308','65684','65686') AND `spell_effect` IN ('71665','70122','69706','69785','69788','71341','70311','-65686','-65684');
-INSERT INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
-INSERT INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');
-INSERT INTO spell_linked_spell VALUES (-71224, 69706, 0, 'Rotface: Mutated Infection => Little Ooze');
-INSERT INTO spell_linked_spell VALUES (-73022, 69706, 0, 'Rotface: Mutated Infection HC => Little Ooze');
-INSERT INTO spell_linked_spell VALUES (-69783, 69785, 0, 'Rotface: Flood => Flood1');
-INSERT INTO spell_linked_spell VALUES (69785, 69788, 2, 'Rotface: Flood1 => Flood2');
-INSERT INTO spell_linked_spell VALUES (71340, 71341, 2, 'Lanathel: Darkfallen1 => Darkfallen2');
-INSERT INTO spell_linked_spell VALUES (-70308, 70311, 0, 'Abomination Transformation');
-INSERT INTO spell_linked_spell VALUES (65684, -65686, 0, 'Light Essence -> Dark Essence '); 
-INSERT INTO spell_linked_spell VALUES (65686, -65684, 0, 'Dark Essence -> Light Essence');
+-- DELETE FROM `spell_linked_spell` where `spell_trigger` IN (`70157', '-71224', '-69783', '69785', '71340', '-70308', '65684', '65686');
+-- DELETE FROM spell_linked_spell where  `spell_effect` IN ('71665','70122','69706','69785','69788','71341','70311','-65686','-65684');
+
+REPLACE INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
+REPLACE INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');
+REPLACE INTO spell_linked_spell VALUES (-71224, 69706, 0, 'Rotface: Mutated Infection => Little Ooze');
+REPLACE INTO spell_linked_spell VALUES (-73022, 69706, 0, 'Rotface: Mutated Infection HC => Little Ooze');
+REPLACE INTO spell_linked_spell VALUES (-69783, 69785, 0, 'Rotface: Flood => Flood1');
+REPLACE INTO spell_linked_spell VALUES (69785, 69788, 2, 'Rotface: Flood1 => Flood2');
+REPLACE INTO spell_linked_spell VALUES (71340, 71341, 2, 'Lanathel: Darkfallen1 => Darkfallen2');
+REPLACE INTO spell_linked_spell VALUES (-70308, 70311, 0, 'Abomination Transformation');
+REPLACE INTO spell_linked_spell VALUES (65684, -65686, 0, 'Light Essence -> Dark Essence '); 
+REPLACE INTO spell_linked_spell VALUES (65686, -65684, 0, 'Dark Essence -> Light Essence');
 
 UPDATE creature_template SET ScriptName='boss_blood_council' WHERE entry=37970;
 UPDATE creature_template SET ScriptName='boss_blood_elf_taldaram_icc' WHERE entry=37973;
@@ -413,8 +408,8 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_malleable_goo' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_sister_svalna' WHERE `entry` = '37126';
 UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
 
-INSERT INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
-INSERT INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
+REPLACE INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
+REPLACE INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
 INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
