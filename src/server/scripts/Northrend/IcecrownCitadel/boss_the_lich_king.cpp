@@ -738,7 +738,7 @@ struct npc_tirion_citadell_iccAI : public ScriptedAI
                 if(m_pInstance)
                     m_pInstance->SetData(DATA_LICH_KING_EVENT, IN_PROGRESS);
                 pLichKing->SetStandState(UNIT_STAND_STATE_STAND);
-                pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
                 pLichKing->SetSpeed(MOVE_WALK, 1.2f);
                 pLichKing->GetMotionMaster()->MovePoint(0, MovePosition);
                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 375);

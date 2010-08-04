@@ -364,7 +364,7 @@ struct npc_ooze_bigAI : public ScriptedAI
         m_uiStickyOozeTimer = 10000;
         m_uiUnstableOozeTimer = 5000;
         DoCast(SPELL_RADIATING_OOZE);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
         me->SetSpeed(MOVE_WALK, 0.7f);
         me->SetSpeed(MOVE_RUN, 0.7f);
     }
@@ -414,7 +414,7 @@ struct npc_ooze_littleAI : public ScriptedAI
     {
         m_uiStickyOozeTimer = 6000;
         DoCast(SPELL_RADIATING_OOZE);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
         me->SetSpeed(MOVE_WALK, 0.7f);
         me->SetSpeed(MOVE_RUN, 0.7f);
     }

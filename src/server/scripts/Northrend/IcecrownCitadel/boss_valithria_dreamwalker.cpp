@@ -319,7 +319,7 @@ struct npc_dreamportal_iccAI : public ScriptedAI
             {
                 pPlayer = who;
                 pPlayer->CastSpell(pPlayer, SPELL_DREAM_STATE, false, 0, 0, 0);
-                pPlayer->AddUnitMovementFlag(MOVEMENTFLAG_FLY_MODE);
+                pPlayer->AddUnitMovementFlag(MOVEMENTFLAG_FLYING);
                 pPlayer->SendMovementFlagUpdate();
                 m_uiStateTimer = 15000;
                 me->ForcedDespawn();
@@ -335,7 +335,7 @@ struct npc_dreamportal_iccAI : public ScriptedAI
         if (m_uiStateTimer <= diff)
         {
             pPlayer->RemoveAurasDueToSpell(SPELL_DREAM_STATE);
-            pPlayer->RemoveUnitMovementFlag(MOVEMENTFLAG_FLY_MODE);
+            pPlayer->RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING);
             pPlayer->SendMovementFlagUpdate();
         } else m_uiStateTimer -= diff;
     }
@@ -720,7 +720,7 @@ struct npc_dreamcloud_iccAI : public ScriptedAI
 	void InitializeAI()
 	{
 		DoCast(SPELL_CLOUD_VISUAL);	  	
-        me->AddUnitMovementFlag(MOVEMENTFLAG_FLY_MODE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_FLYING);
         me->SendMovementFlagUpdate();
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -729,7 +729,7 @@ struct npc_dreamcloud_iccAI : public ScriptedAI
 	void JustRespawned()
 	{
 		DoCast(SPELL_CLOUD_VISUAL);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_FLY_MODE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_FLYING);
         me->SendMovementFlagUpdate();
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
 	}

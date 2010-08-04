@@ -96,10 +96,10 @@ struct instance_oculus : public ScriptedInstance
                 break;
             case CREATURE_EREGOS:
                 uiEregos = pCreature->GetGUID();
-				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				break;
 			case CREATURE_AZURE_GUARDIAN:
-				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
                 break;
 			case NPC_BELGARISTRASZ:
 				uiBera = pCreature->GetGUID();
@@ -131,7 +131,7 @@ struct instance_oculus : public ScriptedInstance
 							Creature* pBera = instance->GetCreature(uiBera);
 							if(pBera)
 							{
-								pBera->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+								pBera->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
 								pBera->GetMotionMaster()->MovePoint(1,BossMoveLoc[1].x,BossMoveLoc[1].y,BossMoveLoc[1].z);
 							}
 						}
@@ -140,7 +140,7 @@ struct instance_oculus : public ScriptedInstance
 							Creature* pVerdisa = instance->GetCreature(uiVerdisa);
 							if(pVerdisa)
 							{
-								pVerdisa->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+								pVerdisa->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
 								pVerdisa->GetMotionMaster()->MovePoint(2,BossMoveLoc[0].x,BossMoveLoc[0].y,BossMoveLoc[0].z);
 							}
 						}
@@ -149,7 +149,7 @@ struct instance_oculus : public ScriptedInstance
 							Creature* pEternos = instance->GetCreature(uiEternos);
 							if(pEternos)
 							{
-								pEternos->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+								pEternos->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
 								pEternos->GetMotionMaster()->MovePoint(3,BossMoveLoc[2].x,BossMoveLoc[2].y,BossMoveLoc[2].z);
 							}
 						}

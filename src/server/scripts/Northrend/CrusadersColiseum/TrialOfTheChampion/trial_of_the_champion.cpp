@@ -319,7 +319,7 @@ struct npc_announcer_toc5AI : public ScriptedAI
                 NextStep(10000,false,1);
                 break;
             case DATA_IN_POSITION: //movement done.		
-		        me->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);			
+		        me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);			
                 me->GetMotionMaster()->MovePoint(1,735.898, 651.961, 411.93);
 				DoScriptText(SAY_START2, me);
                 if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE)))

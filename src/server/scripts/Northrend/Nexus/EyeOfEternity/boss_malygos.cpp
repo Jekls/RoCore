@@ -296,7 +296,7 @@ struct boss_malygosAI : public ScriptedAI
             me->ForcedDespawn();
 
         me->SetFlying(true);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
         me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
 
         m_uiPhase = PHASE_NOSTART;
@@ -406,7 +406,7 @@ struct boss_malygosAI : public ScriptedAI
         if(m_pInstance->GetData(TYPE_OUTRO_CHECK) == 1) //Should be enought to trigger outro immediatly
         {
             me->SetFlying(true);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
             //Destroy Platform
             CastSpellToTrigger(SPELL_DESTROY_PLATFROM_BOOM, false);            
             m_pInstance->SetData(TYPE_DESTROY_PLATFORM, IN_PROGRESS);
@@ -536,7 +536,7 @@ struct boss_malygosAI : public ScriptedAI
         if(phase == 0)
         {
             me->SetFlying(true);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
             me->GetMotionMaster()->Clear(false);
             SetCombatMovement(false);
             me->GetMotionMaster()->MovePoint(0, OtherLoc[2].x, OtherLoc[2].y, OtherLoc[2].z+20);
@@ -588,7 +588,7 @@ struct boss_malygosAI : public ScriptedAI
             if(phase == 31)
             {
                 me->SetFlying(false);
-                me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
                 if(me->getVictim())
                     me->GetMotionMaster()->MoveChase(me->getVictim());
 
@@ -795,7 +795,7 @@ struct boss_malygosAI : public ScriptedAI
         }
 
         SurgeOfPower->SetFlying(true);
-        SurgeOfPower->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE);
+        SurgeOfPower->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
         SurgeOfPower->SetHealth(100000);
         SurgeOfPower->setFaction(14);
         SurgeOfPower->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
@@ -838,7 +838,7 @@ struct boss_malygosAI : public ScriptedAI
                     m_uiSubPhase = 0;
                     m_uiPhase = PHASE_FLOOR;
                     me->SetFlying(false);
-                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
                     me->SetInCombatWithZone();
                     return;
                 }
@@ -958,7 +958,7 @@ struct boss_malygosAI : public ScriptedAI
                     m_pInstance->SetData(TYPE_VORTEX, 1);
 
                 me->SetFlying(true);
-                me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+                me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
                 this->DespawnCreatures(NPC_VORTEX, 200.0f);
                 DoVortex(0);
                 m_uiVortexPhase = 1;
@@ -991,7 +991,7 @@ struct boss_malygosAI : public ScriptedAI
                 if(health <= 50)
                 {
                     me->SetFlying(true);
-                    me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE | MOVEMENTFLAG_LEVITATING);
+                    me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION | MOVEMENTFLAG_LEVITATING);
                     me->InterruptNonMeleeSpells(true);
                     SetCombatMovement(false);
                     me->GetMotionMaster()->Clear(false);
@@ -1169,7 +1169,7 @@ struct boss_malygosAI : public ScriptedAI
                     {
                         pField->SetMaxHealth(1000000);
                         pField->SetFlying(true);
-                        pField->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+                        pField->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
 
                         pField->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                         pField->SetDisplayId(11686);
@@ -1217,7 +1217,7 @@ struct boss_malygosAI : public ScriptedAI
                         if(Creature* pSurge = DoSpawnCreature(NPC_SURGE_OF_POWER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
                         {
                             pSurge->SetFlying(true);
-                            pSurge->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE);
+                            pSurge->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
                             pSurge->Attack(pTarget, true);
                             pSurge->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                             pSurge->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -1269,7 +1269,7 @@ struct boss_malygosAI : public ScriptedAI
                     pTemp->SetUInt32Value(UNIT_FIELD_BYTES_0, 50331648);
                     pTemp->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
                     pTemp->SetFlying(true);
-                    pTemp->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE);
+                    pTemp->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
                     pTemp->SetFacingToObject(me);
                     pTemp->SetVisibility(VISIBILITY_OFF);
                     m_AlexstraszaGUID = pTemp->GetGUID();
@@ -1474,7 +1474,7 @@ struct mob_scion_of_eternityAI : public ScriptedAI
     void Reset()
     {
         me->SetFlying(true);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE);
+        me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
         me->SetSpeed(MOVE_WALK, 0.7f, true);
         me->SetSpeed(MOVE_RUN, 0.7f, true);
         me->SetSpeed(MOVE_FLIGHT, 0.7f, true);

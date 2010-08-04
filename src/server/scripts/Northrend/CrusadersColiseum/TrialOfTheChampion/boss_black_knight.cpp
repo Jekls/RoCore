@@ -496,11 +496,11 @@ struct npc_black_knight_skeletal_gryphonAI : public npc_escortAI
 				me->SetSpeed(MOVE_FLIGHT , 2.0f);
 				break;
                 case 12:
-    			me->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);	
+    			me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);	
 				me->SetSpeed(MOVE_RUN, 2.0f);				
 				break;
 				case 13:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
 				me->SummonCreature(VEHICLE_GR,744.841,634.505,411.575, 2.79);				
 				break;
         }
@@ -537,46 +537,46 @@ struct npc_grAI : public npc_escortAI
         switch(uiPointId)
         {
                 case 1:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				if (pInstance)
 				{
                 pInstance->SetData(DATA_BLACK_KNIGHT, IN_PROGRESS);
 				}
 				break;
                 case 2:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				if (pInstance)
 				{
                 pInstance->SetData(DATA_BLACK_KNIGHT, DONE);
 				}
 				break;
                 case 3:	
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				break;
                 case 4:	
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				if (pInstance)
 				{
                 pInstance->SetData(DATA_KNIGHT, NOT_STARTED);
 				}	
 				break;
                 case 5:
-                me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);	
+                me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);	
 				if (pInstance)
 				{
                 pInstance->SetData(DATA_KNIGHT, IN_PROGRESS);
 				}
 				break;
                 case 6:
-                me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);			
+                me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);			
 				break;				
                 case 7:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
 				break;				
                 case 8:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_FLY_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
                 case 9:
-				me->SetUnitMovementFlags(MOVEMENTFLAG_WALK_MODE);
+				me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
     			if (pInstance)
 				{
                 pInstance->SetData(DATA_KNIGHT, DONE);

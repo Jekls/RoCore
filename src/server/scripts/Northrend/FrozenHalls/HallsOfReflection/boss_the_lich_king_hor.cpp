@@ -98,7 +98,7 @@ struct boss_lich_king_hrAI : public npc_escortAI
                 if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_pInstance->GetData64(DATA_ESCAPE_LIDER))))
                 { 
                  pLider->CastSpell(pLider, SPELL_SILENCE, false);
-                 //pLider->RemoveFlag(MOVEFLAG_WALK, MOVEMENTFLAG_WALK_MODE);  //Questionible 
+                 //pLider->RemoveFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING);  //Questionible 
 				 pLider->SendMonsterMove(pLider->GetPositionX(), pLider->GetPositionY(), pLider->GetPositionZ() + 4, VICTIMSTATE_NORMAL, pLider->isInCombat(), 3000); 
                 }
                 me->setActive(false);
@@ -299,7 +299,7 @@ struct boss_lich_king_hrAI : public npc_escortAI
          
          NonFight = true;
          me->AttackStop();
-         me-> AddUnitMovementFlag(MOVEMENTFLAG_MOVING |MOVEMENTFLAG_WALK_MODE);
+         me-> AddUnitMovementFlag(MOVEMENTFLAG_MOVING |MOVEMENTFLAG_WALKING);
          me->SetSpeed(MOVE_WALK, 2.5f, true);
          if (boss_lich_king_hrAI* pEscortAI = dynamic_cast<boss_lich_king_hrAI*>(me->AI()))
              pEscortAI->Start(false, false);
@@ -396,7 +396,7 @@ uint64 m_uiLiderGUID;
         {
            if(EmergeTimer < diff)
            {
-              me->RemoveFlag(MOVEFLAG_WALK | MOVEMENTFLAG_WALK_MODE, true);
+              me->RemoveFlag(SPLINEFLAG_WALKING | MOVEMENTFLAG_WALKING, true);
               Emerge = true;
               m_uiLiderGUID = m_pInstance->GetData64(DATA_ESCAPE_LIDER);
               if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_uiLiderGUID)))
@@ -462,7 +462,7 @@ uint64 m_uiLiderGUID;
         {
            if(EmergeTimer < diff)
            {
-              me->RemoveFlag(MOVEFLAG_WALK | MOVEMENTFLAG_WALK_MODE, true);
+              me->RemoveFlag(SPLINEFLAG_WALKING | MOVEMENTFLAG_WALKING, true);
               Emerge = true;
               m_uiLiderGUID = m_pInstance->GetData64(DATA_ESCAPE_LIDER);
               if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_uiLiderGUID)))
@@ -509,7 +509,7 @@ bool Walk;
       {
         if(Walk != true)
         {
-              me->RemoveFlag(MOVEFLAG_WALK, MOVEMENTFLAG_WALK_MODE); //Questionible 
+              me->RemoveFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING); //Questionible 
               Walk = true;
               m_uiLiderGUID = m_pInstance->GetData64(DATA_ESCAPE_LIDER);
               if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_uiLiderGUID)))

@@ -529,7 +529,7 @@ struct npc_tcrus_tirionAI : public ScriptedAI
                                 case 38:
                                                 Lichking = me->SummonCreature(NPC_LICH_KING, 564.008057, 176.066330, 394.372772, 4.719572);
                                                 Lichking->GetMotionMaster()->MovePoint(0, 563.955444f, 140.563583f, 393.836548f);
-                                                Lichking->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                                                Lichking->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
                                                 pInstance->SetData(PHASE_SPECHIAL, 39);
                                                 pInstance->SetData(SPECHIAL_TIMER, 500);
                                 break;
@@ -868,7 +868,7 @@ struct npc_LichKingAI : public ScriptedAI
 
     void Reset()
     {
-                me->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
                 me->SetSpeed(MOVE_WALK, 1.4f);
     }
 
