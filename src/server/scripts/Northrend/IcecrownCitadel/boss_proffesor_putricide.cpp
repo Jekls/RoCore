@@ -22,8 +22,8 @@ enum Yells
 {
     SAY_AGGRO        =    -1666025,
     SAY_AIRLOCK      =    -1666026,
-    SAY_PHASE_HC     =    -1666027,
-    SAY_TRANSFORM_1  =    -1666028,
+    SAY_PHASE_HC     =    -1666027, 	
+    SAY_TRANSFORM_1  =    -1666028,	
     SAY_TRANSFORM_2  =    -1666029,
     SAY_KILL_1       =    -1666030,
     SAY_KILL_2       =    -1666031,
