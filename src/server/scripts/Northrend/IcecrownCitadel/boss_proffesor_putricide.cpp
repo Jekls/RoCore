@@ -517,6 +517,7 @@ struct npc_puddle_oozeAI : public ScriptedAI
     uint32 m_uiPuddleOozeTimer;
 	uint32 GrowStack;
 	uint32 CheckStack;
+    uint32 CheckTimer;
 
     void Reset()
     {
@@ -530,6 +531,7 @@ struct npc_puddle_oozeAI : public ScriptedAI
         m_uiPuddleOozeTimer = 5000;
         if (!me->HasAura(SPELL_ROOT))
         DoCast(me, SPELL_ROOT);
+        CheckTimer = 6000;
     }
     void UpdateAI(const uint32 uiDiff)
     {
@@ -540,8 +542,12 @@ struct npc_puddle_oozeAI : public ScriptedAI
 			m_uiPuddleOozeTimer = 3500;
         } else m_uiPuddleOozeTimer -= uiDiff;
 
+        if (CheckTimer <= uiDiff)
+        {
 		if (me->GetAura(SPELL_GROW, 0)->GetStackAmount() <= 1)
 			me->ForcedDespawn();
+                CheckTimer = 3000;
+        } else CheckTimer -= uiDiff;
 
     }
 };
@@ -557,13 +563,16 @@ struct npc_abominationAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
 
     uint32 m_uiGrabTimer;
+    uint32 CheckTimer;
     bool InVehicle;
     Vehicle *vehicle;
 
     void Reset()
     {
-	DoCast(SPELL_MUTATED_AURA);
+        if (!me->HasAura(SPELL_MUTATED_AURA))
+	     DoCast(me, SPELL_MUTATED_AURA);
         m_uiGrabTimer = 2000;
+        CheckTimer = 15000;
         InVehicle = false;
     }
 
@@ -582,8 +591,12 @@ struct npc_abominationAI : public ScriptedAI
             }
         } else m_uiGrabTimer -= uiDiff;
 
+            if (CheckTimer <= uiDiff)
+            {
 		if (!me->HasAura(SPELL_MUTATED_AURA))
 			me->ForcedDespawn();
+                CheckTimer = 3000;
+            } else CheckTimer -= uiDiff;
 
                 if (GetClosestCreatureWithEntry(me, SUMMON_OOZE_PUDDLE, 4.0f))
 		{
