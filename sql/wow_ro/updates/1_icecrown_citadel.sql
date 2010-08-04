@@ -707,7 +707,6 @@ UPDATE `creature_template` SET `VehicleId` = '639' WHERE `entry` = '38582';
 UPDATE `creature_template` SET `VehicleId` = '639' WHERE `entry` = '38583';
 UPDATE `creature_template` SET `VehicleId` = '639' WHERE `entry` = '38583';
 UPDATE `creature_template` SET `VehicleId` = '591' WHERE `entry` = '38583';
-INSERT INTO `vehicle_accessory`(`entry`,`accessory_entry`,`seat_id`,`minion`,`description`) VALUES ('37672','37672','0','0','seat for abomination!')
 
 
 REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES (37813, 38402, 38582, 38583, 0, 0, 30790, 0, 30790, 0, 'Deathbringer Saurfang', '', 'vehichleCursor', 0, 83, 83, 2, 2212, 2212, 0, 1, 3, 468, 702, 0, 175, 47.2, 2000, 2000, 4, 0, 0, 0, 0, 0, 0, 0, 374, 562, 140, 6, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26662, 72378, 73058, 72385, 0, 0, 0, 0, 0, 639, 0, 0, '', 0, 3, 630, 1, 0, 0, 0, 0, 0, 0, 0, 150, 1, 2064, 650854399, 1, 'boss_saurfang');
@@ -1425,3 +1424,5 @@ REPLACE INTO `creature_ai_scripts` (`id`,`creature_id`,`event_type`,`event_inver
 ('26021139','37134','2','0','100','30','15','0','0','0','22','2','0','0','0','0','0','0','0','0','0','0','Ymirjar Huntress - Set Phase 2 at 15% HP'),
 ('26021140','37134','2','11','100','30','15','0','0','0','21','1','0','0','25','0','0','0','1','-47','0','0','Ymirjar Huntress - Start Movement and Flee at 15% HP (Phase 2)'),
 ('26021141','37134','7','0','100','30','0','0','0','0','22','0','0','0','0','0','0','0','0','0','0','0','Ymirjar Huntress - On Evade set Phase to 0');
+
+DELETE FROM `vehicle_accessory` WHERE (`entry`='37672');
