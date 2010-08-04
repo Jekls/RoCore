@@ -570,7 +570,7 @@ struct npc_abominationAI : public ScriptedAI
     void Reset()
     {
         if (!me->HasAura(SPELL_MUTATED_AURA))
-	     DoCast(me, SPELL_MUTATED_AURA);
+	     me->AddAura(SPELL_MUTATED_AURA, me);
         m_uiGrabTimer = 2000;
         CheckTimer = 15000;
         InVehicle = false;
@@ -711,3 +711,4 @@ void AddSC_boss_professor_putricide()
     NewScript->GetAI = &GetAI_npc_gas_cloud;
     NewScript->RegisterSelf();
 };
+// Scripted by Lavi & Andu - WoW-Romania Team (if you use this script, do not remove this seal, no matter what other modification you apply to script.)
