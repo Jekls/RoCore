@@ -199,7 +199,7 @@ struct boss_professor_putricideAI : public ScriptedAI
         if (m_uiUnstableExperimentTimer < uiDiff)
         {
             DoCast(me, SPELL_UNSTABLE_EXPERIMENT);
-            me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT,NULL);
+            me->MonsterTextEmote(EMOTE_UNSTABLE_EXPERIMENT, 0, true);
             m_uiUnstableExperimentTimer = 40000;
             m_uiAddSpawnTimer = 10000;
         } else m_uiUnstableExperimentTimer -= uiDiff;
