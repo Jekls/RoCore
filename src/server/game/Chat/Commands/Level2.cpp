@@ -40,7 +40,6 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#include "GlobalEvents.h"
 #include "OutdoorPvPWG.h"
 #include "OutdoorPvPMgr.h"
 #include "Transport.h"
@@ -3901,7 +3900,7 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
         return false;
     }
 
-    int i =0;
+    int i = 0;
     do
     {
         Field* fields = result->Fetch();
@@ -3942,7 +3941,7 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
 /// Triggering corpses expire check in world
 bool ChatHandler::HandleServerCorpsesCommand(const char* /*args*/)
 {
-    CorpsesErase();
+    sObjectAccessor.RemoveOldCorpses();
     return true;
 }
 
