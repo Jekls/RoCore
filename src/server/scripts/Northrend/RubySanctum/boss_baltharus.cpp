@@ -1,347 +1,441 @@
 /* Copyright (C) 2010 /dev/rsa for ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/* ScriptData
-SDName: boss_baltharus
-SD%Complete: 90%
-SDComment: by notagain and /dev/rsa
-SDCategory: ruby_sanctum
-EndScriptData */
-// Not fully offlike clone work, but Blizz idea is intact.
-// Need correct timers
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
 #include "ScriptPCH.h"
-#include "def_ruby_sanctum.h"
+#include "ruby_sanctum.h"
 
-static Locations SpawnLoc[]=
+enum eTexts
 {
-    {3152.329834f, 359.41757f, 85.301605f},    // Baltharus target point
-    {3153.06f, 389.486f, 86.2596f},            // Baltharus initial point
+	SAY_AGGRO = -1752001,
+	SAY_SLAY1 = -1752002,
+	SAY_SLAY2 = -1752003,
+	SAY_DEATH = -1752004,
+	SAY_SPECIAL = -1752005,
+	SAY_YELL = -1752006,
+	SAY_ATTACK = -1752007,
+
+	XERESTRASZA_HELP = -1752008,
+	XERESTRASZA_THX = -1752009,
+	XERESTRASZA_1 = -1752010,
+	XERESTRASZA_2 = -1752011,
+	XERESTRASZA_3 = -1752012,
+	XERESTRASZA_4 = -1752013,
+	XERESTRASZA_5 = -1752014,
+	XERESTRASZA_6 = -1752015,
+	XERESTRASZA_7 = -1752016
 };
 
-enum Equipment
+enum eBaltharusSpells
 {
-    EQUIP_MAIN           = 49888,
-    EQUIP_OFFHAND        = EQUIP_NO_CHANGE,
-    EQUIP_RANGED         = EQUIP_NO_CHANGE,
-    EQUIP_DONE           = EQUIP_NO_CHANGE,
+	SPELL_BLADE_TEMPEST = 75125,
+	SPELL_BLADE_TEMPEST_25 = 75126,
+	SPELL_CLEAVE = 40504,
+	SPELL_CLEAVE_25 = 40505,
+	SPELL_ENERVATING_BRAND = 74502,
+	SPELL_ENERVATING_BRAND_25 = 74505,
+	SPELL_ENERVATING_BRAND_BUFF = 74507,
+	SPELL_RESPELLING_WAVE = 74509,
+	SPELL_SUMMON_CLONE = 74511
 };
-
-enum BossSpells
-{
-    SPELL_BLADE_TEMPEST              = 75125, // every 22 secs
-    SPELL_ENERVATING_BRAND           = 74502, // friendlys in 12yards = 74505
-    SPELL_REPELLING_WAVE             = 74509, // once if call clone
-    SPELL_SABER_LASH                 = 40504, // every 10-15 secs
-    SPELL_SUMMON_CLONE               = 74511, // summons npc 39899 (Clone)
-    SPELL_CHANNEL_SPELL              = 76221, // Channeling dummy spell
-};
-
-/*######
-## boss_baltharus
-######*/
 
 struct boss_baltharusAI : public ScriptedAI
 {
-    boss_baltharusAI(Creature* pCreature) : BSWScriptedAI(pCreature)
-    {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+	boss_baltharusAI(Creature* pCreature) : ScriptedAI(pCreature)
+	{
+		pInstance = me->GetInstanceData();
+	}
 
-    ScriptedInstance *pInstance;
-    Creature* Baltharus_Target;
-    Creature* Clone;
-    bool inCombat;
-    bool intro;
+	InstanceData* pInstance;
 
-    void Reset()
-    {
-        if(!pInstance)
-            return;
+	uint32 uiBladeTempestTimer;
+	uint32 uiCleaveTimer;
+	uint32 uiEnervatingBrandTimer;
+	uint32 uiRespellingWaveTimer;
 
-        if (me->isAlive()) pInstance->SetData(TYPE_BALTHARUS, NOT_STARTED);
-        me->SetRespawnDelay(7*DAY);
-        resetTimers();
-        setStage(0);
-        Clone = NULL;
-        inCombat = false;
-        intro = false;
-        if (Baltharus_Target = ((Creature*)Unit::GetUnit((*me), pInstance->GetData64(NPC_BALTHARUS_TARGET))))
-        {
-            Baltharus_Target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            Baltharus_Target->GetMotionMaster()->MoveIdle();
-        } else
-               if (Baltharus_Target = me->SummonCreature(NPC_BALTHARUS_TARGET, SpawnLoc[0].x, SpawnLoc[0].y, SpawnLoc[0].z, 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 1000))
-               {
-                   Baltharus_Target->GetMotionMaster()->MoveIdle();
-               }
+	uint64 uiClone1GUID;
+	uint64 uiClone2GUID;
+	uint64 uiClone3GUID;
 
-        if(Creature* pTarget = ((Creature*)Unit::GetUnit((*me), pInstance->GetData64(NPC_XERESTRASZA))))
-            me->SetUInt64Value(UNIT_FIELD_TARGET, pTarget->GetGUID());
-    }
+	bool isMode25; // Used for Clone Summoning( 10-Players: Summon at 50%, 25-Players: Summon at 75%, 50% and 25%)
+	bool bClone1;
+	bool bClone2;
+	bool bClone3;
 
-    void JustReachedHome()
-    {
-        if (!pInstance) return;
+	void Reset()
+	{
+		uiBladeTempestTimer = 5000;
+		uiCleaveTimer = 2000;
+		uiEnervatingBrandTimer = 30000;// 30000-45000
+		uiRespellingWaveTimer = 20000;// 20000-30000
 
-        if (Baltharus_Target) Baltharus_Target->ForcedDespawn();
-        pInstance->SetData(TYPE_BALTHARUS, FAIL);
-    }
+		uiClone1GUID = 0;
+		uiClone2GUID = 0;
+		uiClone3GUID = 0;
 
-    void MoveInLineOfSight(Unit* pWho) 
-    {
-        ScriptedAI::MoveInLineOfSight(pWho);
-        if(!pInstance || intro ||
-            pWho->GetTypeId() != TYPEID_PLAYER ||
-            !pWho->IsWithinDistInMap(me, 60.0f)) return;
+		if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+			isMode25 = false;
+		else
+			isMode25 = true;
+		bClone1 = false;
+		bClone2 = false;
+		bClone3 = false;
+	}
 
-        pInstance->SetData(TYPE_EVENT, 10);
-        DoScriptText(-1666305,me);
-        intro = true;
-    }
+	void EnterCombat(Unit* )
+	{
+		DoScriptText(SAY_AGGRO, me);
+		pInstance->SetData(DATA_BALTHARUS_EVENT, IN_PROGRESS);
+	}
 
-    void JustDied(Unit* pKiller)
-    {
-        if (!pInstance) return;
+	void UpdateAI(const uint32 diff)
+	{
+		if(!UpdateVictim())
+			return;
 
-        if (Baltharus_Target) Baltharus_Target->ForcedDespawn();
-        DoScriptText(-1666303,me);
-        pInstance->SetData(TYPE_BALTHARUS, DONE);
-    }
+		if (uiBladeTempestTimer <= diff)
+		{
+			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
+			uiBladeTempestTimer = urand(7000,7500);
+		} else uiBladeTempestTimer -= diff;
 
-    void KilledUnit(Unit* pVictim)
-    {
-    switch (urand(0,1)) {
-        case 0:
-               DoScriptText(-1666301,me,pVictim);
-               break;
-        case 1:
-               DoScriptText(-1666302,me,pVictim);
-               break;
-        };
-    }
+		if (uiCleaveTimer <= diff)
+		{
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
+			uiCleaveTimer = urand(2000,2500);
+		} else uiCleaveTimer -= diff;
 
-    void JustSummoned(Creature* summoned)
-    {
-        if(!pInstance || !summoned) return;
+		if (uiEnervatingBrandTimer <= diff)
+		{
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
+			DoCast(me, SPELL_ENERVATING_BRAND_BUFF);
+			uiEnervatingBrandTimer = urand(30000,45000);
+			DoScriptText(SAY_YELL, me);
+		} else uiEnervatingBrandTimer -= diff;
 
-        if ( summoned->GetEntry() != NPC_BALTHARUS_TARGET ) 
-        {
-             if (!Clone) Clone = summoned;
-             else if (!Clone->isAlive()) Clone = summoned;
-             summoned->SetInCombatWithZone();
-        }
-    }
+		if (uiRespellingWaveTimer <= diff)
+		{
+			DoCast(SPELL_RESPELLING_WAVE);
+			uiRespellingWaveTimer = urand(20000,30000);
+		} else uiRespellingWaveTimer -= diff;
 
-    void SummonedCreatureJustDied(Creature* summoned)
-    {
-         if (!pInstance || !summoned) return;
+		if(isMode25)
+		{
+			if(!bClone1)
+			{
+				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 75))
+				{
+					bClone1 = true;
+					DoCast(SPELL_SUMMON_CLONE);
+					DoScriptText(SAY_SPECIAL, me);
+				}
+			}
+			else if(!bClone2)
+			{
+				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
+				{
+					bClone2 = true;
+					DoCast(SPELL_SUMMON_CLONE);
+					DoScriptText(SAY_SPECIAL, me);
+				}
+			}
+			else if(!bClone3)
+			{
+				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 25))
+				{
+					bClone3 = true;
+					DoCast(SPELL_SUMMON_CLONE);
+					DoScriptText(SAY_SPECIAL, me);
+				}
+			}
+		}
+		else
+		{
+			if(!bClone1)
+			{
+				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
+				{
+					bClone1 = true;
+					DoCast(SPELL_SUMMON_CLONE);
+					DoScriptText(SAY_SPECIAL, me);
+				}
+			}
+		}
 
-         if (summoned == Clone) Clone = NULL;
-    }
+		DoMeleeAttackIfReady();
+	}
 
-    void Aggro(Unit* pWho)
-    {
-        if (!pInstance) return;
-        if (pWho->GetTypeId() != TYPEID_PLAYER) return;
+	void JustDied(Unit*)
+	{
+		DoScriptText(SAY_DEATH, me);
+		if(isMode25)
+		{
+			if(Creature *Clone1 = pInstance->instance->GetCreature(uiClone1GUID))
+				if(Clone1->isAlive())
+					Clone1->DisappearAndDie();
+			if(Creature *Clone2 = pInstance->instance->GetCreature(uiClone2GUID))
+				if(Clone2->isAlive())
+					Clone2->DisappearAndDie();
+			if(Creature *Clone3 = pInstance->instance->GetCreature(uiClone3GUID))
+				if(Clone3->isAlive())
+					Clone3->DisappearAndDie();
+		}
+		else
+		{
+			if(Creature *Clone1 = pInstance->instance->GetCreature(uiClone1GUID))
+				if(Clone1->isAlive())
+					Clone1->DisappearAndDie();
+		}
 
-        SetEquipmentSlots(false, EQUIP_MAIN, EQUIP_OFFHAND, EQUIP_RANGED);
+		if(pInstance) pInstance->SetData(DATA_BALTHARUS_EVENT, DONE);
+	}
 
-        inCombat = true;
-        me->InterruptNonMeleeSpells(true);
-        me->SetInCombatWithZone();
-        SetCombatMovement(true);
-        pInstance->SetData(TYPE_BALTHARUS, IN_PROGRESS);
-        DoScriptText(-1666300,me);
-    }
+	void KilledUnit(Unit* victim)
+	{
+		if(victim == me)
+			return;
+		DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+	}
 
-    void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
-    {
-        if (!pInstance) return;
-
-        if (!me || !me->isAlive())
-            return;
-
-        if(pDoneBy->GetGUID() == me->GetGUID()) 
-          return;
-
-        if (Clone && Clone->isAlive())
-        {
-            pDoneBy->DealDamage(Clone, uiDamage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            uiDamage = 0;
-        }
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!pInstance) return;
-
-        if (!inCombat && !me->IsNonMeleeSpellCasted(false))
-            timedCast(SPELL_CHANNEL_SPELL, uiDiff, Baltharus_Target);
-
-        if (!me->SelectHostileTarget() || !me->getVictim())
-            return;
-
-        switch (getStage())
-        {
-            case 0:
-                 if ( me->GetHealthPercent() <= 66.0f) setStage(1);
-                 break;
-
-            case 1:
-                 me->InterruptNonMeleeSpells(true);
-                 if (currentDifficulty == RAID_DIFFICULTY_25MAN_NORMAL
-                     || currentDifficulty == RAID_DIFFICULTY_25MAN_HEROIC)
-                     {
-                        doCast(SPELL_REPELLING_WAVE);
-                        doCast(SPELL_SUMMON_CLONE);
-                     };
-                 setStage(2);
-                 break;
-
-            case 2:
-                 if ( me->GetHealthPercent() <= 50.0f) setStage(3);
-                 break;
-
-            case 3:
-                 me->InterruptNonMeleeSpells(true);
-                 if (currentDifficulty == RAID_DIFFICULTY_10MAN_NORMAL
-                     || currentDifficulty == RAID_DIFFICULTY_10MAN_HEROIC)
-                     {
-                        doCast(SPELL_REPELLING_WAVE);
-                        doCast(SPELL_SUMMON_CLONE);
-                     };
-                 setStage(4);
-                 break;
-
-            case 4:
-                 if ( me->GetHealthPercent() <= 33.0f) setStage(5);
-                 break;
-
-            case 5:
-                 me->InterruptNonMeleeSpells(true);
-                 if (currentDifficulty == RAID_DIFFICULTY_25MAN_NORMAL
-                     || currentDifficulty == RAID_DIFFICULTY_25MAN_HEROIC)
-                     {
-                        doCast(SPELL_SUMMON_CLONE);
-                        doCast(SPELL_REPELLING_WAVE);
-                     };
-                 setStage(6);
-                 break;
-
-            case 6:
-            default:
-                 break;
-        }
-
-        if (me->IsNonMeleeSpellCasted(false)) return;
-
-//        timedCast(SPELL_BLADE_TEMPEST, uiDiff);
-        timedCast(SPELL_ENERVATING_BRAND, uiDiff);
-        timedCast(SPELL_SABER_LASH, uiDiff);
-
-        DoMeleeAttackIfReady();
-    }
+	void JustSummoned(Creature* pSummon)
+	{
+		if(!isMode25)
+		{
+			uiClone1GUID = pSummon->GetGUID();
+		}
+		else
+		{
+			if(uiClone1GUID == 0)
+				uiClone1GUID = pSummon->GetGUID();
+			else if(uiClone2GUID == 0)
+				uiClone2GUID = pSummon->GetGUID();
+			else if(uiClone3GUID == 0)
+				uiClone3GUID = pSummon->GetGUID();
+		}
+	}
 };
 
-CreatureAI* GetAI_boss_baltharus(Creature* pCreature)
+CreatureAI* GetAI_boss_baltharus(Creature *pCreature)
 {
-    return new boss_baltharusAI(pCreature);
+	return new boss_baltharusAI(pCreature);
 }
 
-/*######
-## mob_baltharus_clone
-######*/
-
-struct mob_baltharus_cloneAI : public ScriptedAI
+struct boss_baltharus_cloneAI : public ScriptedAI
 {
-    mob_baltharus_cloneAI(Creature* pCreature) : BSWScriptedAI(pCreature) 
-    {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+	boss_baltharus_cloneAI(Creature* pCreature) : ScriptedAI(pCreature)
+	{
+		pInstance = me->GetInstanceData();
+	}
 
-    ScriptedInstance *pInstance;
+	InstanceData* pInstance;
 
-    void Reset()
-    {
-        if(!pInstance) return;
-        resetTimers();
-        me->SetRespawnDelay(7*DAY);
-    }
+	uint32 uiBladeTempestTimer;
+	uint32 uiCleaveTimer;
+	uint32 uiEnervatingBrandTimer;
 
-    void KilledUnit(Unit* pVictim)
-    {
-    switch (urand(0,1)) {
-        case 0:
-               DoScriptText(-1666301,me,pVictim);
-               break;
-        case 1:
-               DoScriptText(-1666302,me,pVictim);
-               break;
-        };
-    }
+	void Reset()
+	{
+		uiBladeTempestTimer = 5000;
+		uiCleaveTimer = 2000;
+		uiEnervatingBrandTimer = 30000;// 30000-45000
+	}
 
-    void JustDied(Unit* pKiller)
-    {
-        if (!pInstance) return;
-    }
+	void UpdateAI(const uint32 diff)
+	{
+		if(!UpdateVictim())
+			return;
 
-    void Aggro(Unit* pWho)
-    {
-        if (!pInstance) return;
+		if (uiBladeTempestTimer <= diff)
+		{
+			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
+			uiBladeTempestTimer = urand(7000,7500);
+		} else uiBladeTempestTimer -= diff;
 
-        SetEquipmentSlots(false, EQUIP_MAIN, EQUIP_OFFHAND, EQUIP_RANGED);
+		if (uiCleaveTimer <= diff)
+		{
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
+			uiCleaveTimer = urand(2000,2500);
+		} else uiCleaveTimer -= diff;
 
-        me->SetInCombatWithZone();
-    }
+		if (uiEnervatingBrandTimer <= diff)
+		{
+			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
+			DoCast(me, SPELL_ENERVATING_BRAND_BUFF);
+			uiEnervatingBrandTimer = urand(30000,45000);
+		} else uiEnervatingBrandTimer -= diff;
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!me->SelectHostileTarget() || !me->getVictim())
-            return;
-
-        if (!pInstance) return;
-
-        if (pInstance->GetData(TYPE_BALTHARUS) != IN_PROGRESS)
-            me->ForcedDespawn();
-
-        doCastAll(uiDiff);
-        DoMeleeAttackIfReady();
-
-    }
+		DoMeleeAttackIfReady();
+	}
 };
 
-CreatureAI* GetAI_mob_baltharus_clone(Creature* pCreature)
+CreatureAI* GetAI_boss_baltharus_clone(Creature *pCreature)
 {
-    return new mob_baltharus_cloneAI(pCreature);
+	return new boss_baltharus_cloneAI(pCreature);
 }
 
+bool GossipHello_npc_xerestrasza(Player *pPlayer, Creature *pCreature)
+{
+	if(pCreature->GetInstanceData()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
+		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
+	return true;
+}
+
+bool GossipSelect_npc_xerestrasza(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
+{
+	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
+		pCreature->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
+	pPlayer->PlayerTalkClass->CloseGossip();
+	return true;
+}
+
+struct npc_xerestraszaAI : public ScriptedAI
+{
+	npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
+		pInstance = me->GetInstanceData();
+	}
+
+	InstanceData* pInstance;
+	uint32 Timer;
+	uint32 Counter;
+
+	bool bThx;
+	bool bHelp;
+
+	void Reset()
+	{
+		Timer = 9000;
+		Counter = 0;
+		bThx = false;
+		bHelp = false;
+	}
+
+	void MoveInLineOfSight(Unit*)
+	{
+		if(!bHelp)
+		{
+			DoScriptText(XERESTRASZA_HELP, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
+			bHelp = true;
+		}
+	}
+
+	void UpdateAI(const uint32 diff)
+	{
+		if(!bThx)
+			if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
+			{
+				DoScriptText(XERESTRASZA_THX, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
+				bThx = true;
+			}
+
+			if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == IN_PROGRESS)
+			{
+				switch(Counter)
+				{
+				case 0:
+					DoScriptText(XERESTRASZA_1, me);
+					Counter++;
+					break;
+				case 1:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_2, me);
+						Timer = 11000;
+						Counter++;
+					} else Timer -= diff;
+					break;
+				case 2:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_3, me);
+						Timer = 11000;
+						Counter++;
+					} else Timer -= diff;
+					break;
+				case 3:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_4, me);
+						Timer = 11000;
+						Counter++;
+					} else Timer -= diff;
+					break;
+				case 4:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_5, me);
+						Timer = 11000;
+						Counter++;
+					} else Timer -= diff;
+					break;
+				case 5:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_6, me);
+						Timer = 11000;
+						Counter++;
+					} else Timer -= diff;
+					break;
+				case 6:
+					if (Timer <= diff)
+					{
+						DoScriptText(XERESTRASZA_7, me);
+						pInstance->SetData(DATA_XERESTRASZA_EVENT, DONE);
+					} else Timer -= diff;
+					break;
+				}
+			}
+	}
+};
+
+CreatureAI* GetAI_npc_xerestrasza(Creature *pCreature)
+{
+	return new npc_xerestraszaAI(pCreature);
+}
+
+bool GOHello_go_firefield(Player *pPlayer, GameObject *pGO)
+{
+	pGO->SetGoState(GO_STATE_ACTIVE);
+	pGO->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, NOT_STARTED);
+	return true;
+}
 
 void AddSC_boss_baltharus()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_baltharus";
-    newscript->GetAI = &GetAI_boss_baltharus;
-    newscript->RegisterSelf();
+	Script *newscript;
 
-    newscript = new Script;
-    newscript->Name = "mob_baltharus_clone";
-    newscript->GetAI = &GetAI_mob_baltharus_clone;
-    newscript->RegisterSelf();
+	newscript = new Script;
+	newscript->Name = "boss_baltharus";
+	newscript->GetAI = &GetAI_boss_baltharus;
+	newscript->RegisterSelf();
+
+	newscript = new Script;
+	newscript->Name = "boss_baltharus_clone";
+	newscript->GetAI = &GetAI_boss_baltharus_clone;
+	newscript->RegisterSelf();
+
+	newscript = new Script;
+	newscript->Name = "npc_xerestrasza";
+	newscript->pGossipHello = &GossipHello_npc_xerestrasza;
+	newscript->pGossipSelect = &GossipSelect_npc_xerestrasza;
+	newscript->GetAI = &GetAI_npc_xerestrasza;
+	newscript->RegisterSelf();
+
+	newscript = new Script;
+	newscript->Name = "go_firefield";
+	newscript->pGOHello = &GOHello_go_firefield;
+	newscript->RegisterSelf();
 }
