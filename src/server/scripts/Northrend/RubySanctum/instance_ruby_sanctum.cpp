@@ -149,6 +149,7 @@ struct instance_ruby_sanctum : public ScriptedInstance
 			return m_auiEncounter[3];
 		if(uiType == DATA_XERESTRASZA_EVENT)
 			return m_uiXerestrasza;
+                        return 0;
 	}
 
 	uint64 GetData64(uint32 uiType)
@@ -163,6 +164,7 @@ struct instance_ruby_sanctum : public ScriptedInstance
 			return m_uiHalionGUID;
 		if(uiType == DATA_XERESTRASZA)
 			return m_uiXerestraszaGUID;
+                        return 0;
 	}
 
 	std::string GetSaveData()
