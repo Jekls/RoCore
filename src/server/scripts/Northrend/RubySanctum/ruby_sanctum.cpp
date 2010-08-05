@@ -121,46 +121,46 @@ struct mob_xerestraszaAI : public ScriptedAI
                           pInstance->SetData(TYPE_EVENT, 20);
                           break;
                     case 20:
-                          DoScriptText(-1752008,me);
+                          DoScriptText(-1666000,me);
                           pInstance->SetData(TYPE_EVENT,0);
                           break;
 // Xerestrasza event
                     case 30:
                           me->SetActiveObjectState(true);
-                          DoScriptText(-1752009,me);
+                          DoScriptText(-1666001,me);
                           StartMovement(1,40);
                           break;
                     case 40:
-                          DoScriptText(-1752010,me);
+                          DoScriptText(-1666002,me);
                           StartMovement(2,50);
                           break;
                     case 50:
-                          DoScriptText(-1752011,me);
+                          DoScriptText(-1666003,me);
                           UpdateTimer = 12000;
                           pInstance->SetData(TYPE_EVENT,60);
                           break;
                     case 60:
-                          DoScriptText(-1752012,me);
+                          DoScriptText(-1666004,me);
                           UpdateTimer = 12000;
                           pInstance->SetData(TYPE_EVENT,70);
                           break;
                     case 70:
-                          DoScriptText(-1752013,me);
+                          DoScriptText(-1666005,me);
                           UpdateTimer = 10000;
                           pInstance->SetData(TYPE_EVENT,80);
                           break;
                     case 80:
-                          DoScriptText(-1752014,me);
+                          DoScriptText(-1666006,me);
                           UpdateTimer = 10000;
                           pInstance->SetData(TYPE_EVENT,90);
                           break;
                     case 90:
-                          DoScriptText(-1752015,me);
+                          DoScriptText(-1666007,me);
                           UpdateTimer = 10000;
                           pInstance->SetData(TYPE_EVENT,100);
                           break;
                     case 100:
-                          DoScriptText(-1752016,me);
+                          DoScriptText(-1666008,me);
                           UpdateTimer = 4000;
                           pInstance->SetData(TYPE_EVENT,110);
                           break;

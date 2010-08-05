@@ -44,7 +44,7 @@ static Locations SpawnLoc[]=
 
 struct boss_ragefireAI : public ScriptedAI
 {
-    boss_ragefireAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_ragefireAI(Creature* pCreature) : BSWScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();

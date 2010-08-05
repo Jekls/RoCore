@@ -33,7 +33,7 @@ INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3
 ( -1752025, "Hhrr...Grr..", 0, "", 17531, 1, 0),
 ( -1752026, "Burn in the master's flame!", 0, "", 17532, 1, 0),
 
-(-1752027, 'Meddlesome insects, you\'re too late! The Ruby Sanctum is lost.',NULL,NULL,17499,0,0),
+(-1752027, 'Insects! You''re too late. The Ruby Sanctum is lost.',NULL,NULL,17499,0,0),
 (-1752028, 'Your world teeters on the brink of annihilation. You will ALL bear witness to the coming of a new age of DESTRUCTION!',NULL,NULL,17500,0,0),
 (-1752029, 'Another hero falls.',NULL,NULL,17501,0,0),
 (-1752030, 'Hahahahaha.',NULL,NULL,17502,0,0),

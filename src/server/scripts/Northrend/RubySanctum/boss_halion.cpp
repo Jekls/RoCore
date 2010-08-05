@@ -82,20 +82,20 @@ enum
     FR_RADIUS                                   = 40,
 
     //SAYS
-    SAY_HALION_SPAWN                = -1752027, //17499 Meddlesome insects, you're too late! The Ruby Sanctum is lost.
-    SAY_HALION_AGGRO                = -1752028, //17500 Your world teeters on the brink of annihilation. You will all bear witness to the coming of a new age of destruction!
-    SAY_HALION_SLAY_1               = -1752029, //17501 Another hero falls.
-    SAY_HALION_SLAY_2               = -1752030, //17502 Ha Ha Ha!
-    SAY_HALION_DEATH                = -1752031, //17503 Relish this victory mortals, for it will be your last. This world will burn with the Master's return!
-    SAY_HALION_BERSERK              = -1752032, //17504 Not good enough!
-    SAY_HALION_SPECIAL_1            = -1752033, //17505 The heavens burn!
-    SAY_HALION_SPECIAL_2            = -1752034, //17506 Beware the shadow!
-    SAY_HALION_PHASE_2              = -1752035, //17507 You will find only suffering within the realm of Twilight. Enter if you dare.
-    SAY_HALION_PHASE_3              = -1752036, //17508 I am the light AND the darkness! Cower mortals before the Herald of Deathwing!
-    EMOTE_WARNING                   = -1752037, //orbs charge warning
-    EMOTE_REAL                      = -1752038, // To real world message
-    EMOTE_TWILIGHT                  = -1752039, // To twilight world message
-    EMOTE_NEITRAL                   = -1752040, // Halion reveal HP message
+    SAY_HALION_SPAWN                = -1666100, //17499 Meddlesome insects, you're too late! The Ruby Sanctum is lost.
+    SAY_HALION_AGGRO                = -1666101, //17500 Your world teeters on the brink of annihilation. You will all bear witness to the coming of a new age of destruction!
+    SAY_HALION_SLAY_1               = -1666102, //17501 Another hero falls.
+    SAY_HALION_SLAY_2               = -1666103, //17502 Ha Ha Ha!
+    SAY_HALION_DEATH                = -1666104, //17503 Relish this victory mortals, for it will be your last. This world will burn with the Master's return!
+    SAY_HALION_BERSERK              = -1666105, //17504 Not good enough!
+    SAY_HALION_SPECIAL_1            = -1666106, //17505 The heavens burn!
+    SAY_HALION_SPECIAL_2            = -1666107, //17506 Beware the shadow!
+    SAY_HALION_PHASE_2              = -1666108, //17507 You will find only suffering within the realm of Twilight. Enter if you dare.
+    SAY_HALION_PHASE_3              = -1666109, //17508 I am the light AND the darkness! Cower mortals before the Herald of Deathwing!
+    EMOTE_WARNING                   = -1666110, //orbs charge warning
+    EMOTE_REAL                      = -1666111, // To real world message
+    EMOTE_TWILIGHT                  = -1666112, // To twilight world message
+    EMOTE_NEITRAL                   = -1666113, // Halion reveal HP message
 };
 
 static Locations SpawnLoc[]=
