@@ -454,9 +454,10 @@ void AddSC_icecrown_citadel_trash();
 void AddSC_boss_blood_queen_lana_thel();
 void AddSC_instance_ruby_sanctum();   // Ruby Sanctum
 void AddSC_boss_baltharus();
-void AddSC_boss_zarithrian();
+void AddSC_boss_zarithian();
 void AddSC_boss_halion();
 void AddSC_boss_ragefire();
+void AddSC_ruby_sanctum();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -1010,9 +1011,10 @@ void AddScripts()
     AddSC_boss_blood_queen_lana_thel();
     AddSC_instance_ruby_sanctum();   // Ruby Sanctum
     AddSC_boss_baltharus();
-    AddSC_boss_zarithrian();
+    AddSC_boss_zarithian();
     AddSC_boss_halion();
     AddSC_boss_ragefire();
+    AddSC_ruby_sanctum();
 
     AddSC_dalaran();
     AddSC_borean_tundra();
