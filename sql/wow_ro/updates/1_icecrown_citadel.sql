@@ -372,9 +372,11 @@ REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_ent
 DELETE FROM spell_linked_spell where `spell_trigger`='-69290' AND `spell_effect`='72103';
 REPLACE INTO spell_linked_spell VALUES (-69290, 72103, 0, 'Festergut: Spores end => Inoculated');
 
-
--- DELETE FROM `spell_linked_spell` where `spell_trigger` IN (`70157', '-71224', '-69783', '69785', '71340', '-70308', '65684', '65686');
--- DELETE FROM spell_linked_spell where  `spell_effect` IN ('71665','70122','69706','69785','69788','71341','70311','-65686','-65684');
+DELETE FROM spell_linked_spell where `spell_trigger` IN ('70157','70117',69785,71340,65684,65686);
+DELETE FROM spell_linked_spell where `spell_trigger`='-71224';
+DELETE FROM spell_linked_spell where `spell_trigger`='-73022';
+DELETE FROM spell_linked_spell where `spell_trigger`='-69783';
+DELETE FROM spell_linked_spell where `spell_trigger`='-70308';
 
 REPLACE INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
 REPLACE INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');

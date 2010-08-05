@@ -547,9 +547,11 @@ REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_ent
 DELETE FROM spell_linked_spell where `spell_trigger`='-69290' AND `spell_effect`='72103';
 REPLACE INTO spell_linked_spell VALUES (-69290, 72103, 0, 'Festergut: Spores end => Inoculated');
 
-
--- DELETE FROM `spell_linked_spell` where `spell_trigger` IN (`70157', '-71224', '-69783', '69785', '71340', '-70308', '65684', '65686');
--- DELETE FROM spell_linked_spell where  `spell_effect` IN ('71665','70122','69706','69785','69788','71341','70311','-65686','-65684');
+DELETE FROM spell_linked_spell where `spell_trigger` IN ('70157','70117',69785,71340,65684,65686);
+DELETE FROM spell_linked_spell where `spell_trigger`='-71224';
+DELETE FROM spell_linked_spell where `spell_trigger`='-73022';
+DELETE FROM spell_linked_spell where `spell_trigger`='-69783';
+DELETE FROM spell_linked_spell where `spell_trigger`='-70308';
 
 REPLACE INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
 REPLACE INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');
@@ -4901,14 +4903,6 @@ ALTER TABLE db_version CHANGE COLUMN required_2_world_fixes required_3_world_ice
 
 REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES (37672, 0, 38285, 0, 0, 0, 31008, 0, 31008, 0, 'Mutated Abomination', '', 'vehichleCursor', 0, 80, 80, 2, 35, 35, 0, 1, 1, 422, 586, 0, 642, 7.5, 2000, 2000, 1, 16384, 0, 0, 0, 0, 0, 0, 345, 509, 103, 6, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 72508, 72527, 70539, 70542, 0, 0, 0, 0, 0, 336, 0, 0, '', 0, 3, 108.471, 1, 0, 0, 0, 0, 0, 0, 0, 170, 1, 0, 609320197, 0, 'npc_abomination');
 
-INSERT INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
-INSERT INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');
-INSERT INTO spell_linked_spell VALUES (-71224, 69706, 0, 'Rotface: Mutated Infection => Little Ooze');
-INSERT INTO spell_linked_spell VALUES (-69783, 69785, 0, 'Rotface: Flood => Flood1');
-INSERT INTO spell_linked_spell VALUES (69785, 69788, 2, 'Rotface: Flood1 => Flood2');
-INSERT INTO spell_linked_spell VALUES (71340, 71341, 2, 'Lanathel: Darkfallen1 => Darkfallen2');
-INSERT INTO spell_linked_spell VALUES (-70308, 70311, 0, 'Abomination Transformation');
-
 UPDATE creature_template SET ScriptName='boss_blood_council' WHERE entry=37970;
 UPDATE creature_template SET ScriptName='boss_blood_elf_taldaram_icc' WHERE entry=37973;
 UPDATE creature_template SET ScriptName='boss_blood_elf_keleset_icc' WHERE entry=37972;
@@ -5830,7 +5824,7 @@ INSERT INTO `creature` VALUES
 (123548, 37774, 658, 3, 128, 0, 0, 1076.62, 209.063, 628.156, 3.79407, 7200, 0, 0, 100800, 264420, 0, 0),
 (123584, 37779, 658, 3, 64, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 126000, 0, 0, 0),
 (123585, 37582, 658, 3, 128, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 60480, 176280, 0, 0),
-(135304, 36661, 658, 3, 1, 0, 0, 987.517, 172.886, 634.013, 5.77039, 300, 0, 0, 3235440, 41690, 0, 0);
+(189999, 36661, 658, 3, 1, 0, 0, 987.517, 172.886, 634.013, 5.77039, 300, 0, 0, 3235440, 41690, 0, 0);
 
 ALTER TABLE db_version CHANGE COLUMN required_280_world_pit_of_saron required_295_world_forge_of_souls bit;
 
