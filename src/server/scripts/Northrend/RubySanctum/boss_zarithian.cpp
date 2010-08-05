@@ -44,7 +44,7 @@ enum Equipment
     EQUIP_DONE           = EQUIP_NO_CHANGE,
 };
 
-static Locations SpawnLoc[]=
+static Locations SpawnPosition[] =
 {
     {3008.552734f, 530.471680f, 89.195290f},     // 0 - Zarithian start point, o = 6,16
     {3014.313477f, 486.453735f, 89.255096f},    // 1 - Mob spawn 1
@@ -53,7 +53,7 @@ static Locations SpawnLoc[]=
 
 struct boss_zarithianAI : public ScriptedAI
 {
-    boss_zarithianAI(Creature* pCreature) : BSWScriptedAI(pCreature)
+    boss_zarithianAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
         Reset();
@@ -169,7 +169,7 @@ CreatureAI* GetAI_boss_zarithian(Creature* pCreature)
 
 struct mob_flamecaller_rubyAI : public ScriptedAI
 {
-    mob_flamecaller_rubyAI(Creature *pCreature) : BSWScriptedAI(pCreature)
+    mob_flamecaller_rubyAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
         pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         Reset();
