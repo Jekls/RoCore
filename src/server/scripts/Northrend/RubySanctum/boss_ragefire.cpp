@@ -1,322 +1,225 @@
 /* Copyright (C) 2010 /dev/rsa for ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
-/* ScriptData
-SDName: boss_ragefire
-SD%Complete: 90%
-SDComment: by notagain && /dev/rsa
-SDCategory: ruby_sanctum
-EndScriptData */
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
 #include "ScriptPCH.h"
-#include "def_ruby_sanctum.h"
+#include "ruby_sanctum.h"
 
-enum BossSpells
+enum eTexts
 {
-    SPELL_ENRAGE                     = 78722, //soft enrage + fire nova
-    SPELL_FLAME_BREATH               = 74404,
-    SPELL_BEACON                     = 74453, //mark for conflag, in enter to fly phase, 2 in 10, 5 in 25
-    SPELL_CONFLAGATION               = 74452, // after fly up
-    SPELL_CONFLAGATION_1             = 74455, // Triggered?
-    SPELL_CONFLAGATION_2             = 74456, // Aura
-
-    MAX_BEACON_TARGETS               = 5,
+	SAY_AGGRO = -1752022,
+	SAY_SLAY1 = -1752023,
+	SAY_SLAY2 = -1752024,
+	SAY_DEATH = -1752025,
+	SAY_SPECIAL = -1752026
 };
 
-static Locations SpawnLoc[]=
+enum eSpells
 {
-    {3151.3898f, 636.8519f, 78.7396f},    // 0 Saviana start point
-    {3149.635f, 668.9644f, 90.507f},    // 1 Saviana fly phase, o=4,69
+	SPELL_ENRAGE = 78722,
+	SPELL_FLAME_BREATH = 74403,
+	SPELL_FLAME_BREATH_25 = 74404,
+	SPELL_FIRE_NOVA = 78723,
+	SPELL_CONFLAGRATION_FIRE_BALL = 74454,
+	SPELL_CONFLAGRATION_DMG = 74456,
+	SPELL_FLAME_BEACON = 74453
 };
 
 struct boss_ragefireAI : public ScriptedAI
 {
-    boss_ragefireAI(Creature* pCreature) : BSWScriptedAI(pCreature)
-    {
-        pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        Reset();
-    }
+	boss_ragefireAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
+		pInstance = me->GetInstanceData();
+	}
 
-    ScriptedInstance *pInstance;
-    uint8 nextPoint;
-    Unit* marked[MAX_BEACON_TARGETS];
-    bool MovementStarted;
-    bool conflagated;
+	InstanceData* pInstance;
 
-    void Reset()
-    {
-        if(!pInstance)
-            return;
-        me->SetRespawnDelay(7*DAY);
-        if (me->isAlive()) pInstance->SetData(TYPE_RAGEFIRE, NOT_STARTED);
-        resetTimers();
-        setStage(0);
-        nextPoint = 0;
-        conflagated = false;
-        for (uint8 i = 0; i < MAX_BEACON_TARGETS; ++i)
-            marked[i] = NULL;
-    }
+	uint32 uiFlameBreathTimer;
+	uint32 uiEnrageTimer;
+	uint32 uiConflagrationTimer;
+	uint32 uiAirSteps;
+	uint32 uiAirTimer;
+	uint32 uiFlameNovaTimer;
 
-    void MovementInform(uint32 type, uint32 id)
-    {
-        if (!pInstance) return;
+	Player* pConflagrationTarget1;
+	Player* pConflagrationTarget2;
+	Player* pConflagrationTarget3;
+	Player* pConflagrationTarget4;
+	Player* pConflagrationTarget5;
 
-        if (type != POINT_MOTION_TYPE || !MovementStarted) return;
+	bool bAir;
 
-        if (id == nextPoint) {
-                me->GetMotionMaster()->MovementExpired();
-                MovementStarted = false;
-                }
-    }
+	void Reset()
+	{
+		uiFlameBreathTimer = 10000;
+		uiEnrageTimer = 25000;
+		uiConflagrationTimer = 45000;
+		uiFlameNovaTimer = 9000;
+		uiAirSteps = 0;
+		uiAirTimer = 5000;
 
-    void SetFly(bool command = false)
-    {
-        if (command)
-        {
-            me->SetUInt32Value(UNIT_FIELD_BYTES_0, 50331648);
-            me->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
-            me->HandleEmoteCommand(EMOTE_ONESHOT_FLY_SIT_GROUND_UP);
-            me->AddSplineFlag(SPLINEFLAG_FLYING);
-        }
-        else
-        {
-            me->SetUInt32Value(UNIT_FIELD_BYTES_0, 0);
-            me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-            me->RemoveSplineFlag(SPLINEFLAG_FLYING);
-        }
-    }
+		bAir = false;
+	}
 
-    void StartMovement(uint32 id)
-    {
-        nextPoint = id;
-        me->GetMotionMaster()->Clear();
-        me->GetMotionMaster()->MovePoint(id, SpawnLoc[id].x, SpawnLoc[id].y, SpawnLoc[id].z);
-        MovementStarted = true;
-    }
+	void EnterCombat(Unit*)
+	{
+		if(pInstance) pInstance->SetData(DATA_RAGEFIRE_EVENT, IN_PROGRESS);
+		DoScriptText(SAY_AGGRO, me);
+	}
 
-    void KilledUnit(Unit* pVictim)
-    {
-    switch (urand(0,1)) {
-        case 0:
-               DoScriptText(-1666401,me,pVictim);
-               break;
-        case 1:
-               DoScriptText(-1666402,me,pVictim);
-               break;
-        };
-    }
+	void UpdateAI(const uint32 diff)
+	{
+		if(!UpdateVictim())
+			return;
 
-    void JustReachedHome()
-    {
-        if (pInstance)
-            pInstance->SetData(TYPE_RAGEFIRE, FAIL);
-    }
+		if(!bAir)
+		{
+			if(uiFlameBreathTimer <= diff)
+			{
+				DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_FLAME_BREATH_25 : SPELL_FLAME_BREATH);
+				uiFlameBreathTimer = urand(10000, 15000);
+			}else uiFlameBreathTimer -= diff;
 
-    void Aggro(Unit *who) 
-    {
-        if(!pInstance) return;
+			if(uiEnrageTimer <= diff)
+			{
+				DoCast(SPELL_ENRAGE);
+				uiEnrageTimer = 25000;
+			}else uiEnrageTimer -= diff;
 
-        pInstance->SetData(TYPE_RAGEFIRE, IN_PROGRESS);
-        me->SetInCombatWithZone();
-        DoScriptText(-1666400,me);
-    }
+			if(uiFlameNovaTimer <= diff)
+			{
+				DoCast(SPELL_FIRE_NOVA);
+				uiFlameNovaTimer = urand(9000, 11000);
+			}else uiFlameNovaTimer -= diff;
 
-    void JustDied(Unit *killer)
-    {
-        if(!pInstance) return;
+			if(uiConflagrationTimer <= diff)
+			{
+				bAir = true;
+				uiConflagrationTimer = 45000;
+			}else uiConflagrationTimer -= diff;
 
-        pInstance->SetData(TYPE_RAGEFIRE, DONE);
-        DoScriptText(-1666403,me);
-    }
+			DoMeleeAttackIfReady();
+		}
+		else
+		{
+			switch(uiAirSteps)
+			{
+			case 0:
+				me->GetMotionMaster()->MovePoint(1, 3159.04, 676.08, 103.05);
+				if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+				{
+					pConflagrationTarget1 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget2 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+				}
+				else
+				{
+					pConflagrationTarget1 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget2 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget3 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget4 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+					pConflagrationTarget5 = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
+				}
+				uiAirSteps++;
+				break;
+			case 1:
+				if(uiAirTimer <= diff)
+				{
+					DoScriptText(SAY_SPECIAL, me);
+					if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_FIRE_BALL, true);
+					}
+					else
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_FLAME_BEACON, true);
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_CONFLAGRATION_FIRE_BALL, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_CONFLAGRATION_FIRE_BALL, true);
+					}
+					uiAirSteps++;
+					uiAirTimer = 4000;
+				}else uiAirTimer -= diff;
+				break;
+			case 2:
+				if(uiAirTimer <= diff)
+				{
+					me->GetMotionMaster()->MoveTargetedHome();
+					uiAirSteps++;
+					uiAirTimer = 1000;
+				}else uiAirTimer -= diff;
+				break;
+			case 3:
+				if(uiAirTimer <= diff)
+				{
+					DoCast(SPELL_CONFLAGRATION_DMG); // Visual in Case of No Target
+					if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_DMG, true);
+					}
+					else
+					{
+						me->CastSpell(pConflagrationTarget1, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget2, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget3, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget4, SPELL_CONFLAGRATION_DMG, true);
+						me->CastSpell(pConflagrationTarget5, SPELL_CONFLAGRATION_DMG, true);
+					}
+					uiAirSteps = 0;
+					bAir = false;
+					uiAirTimer = 5000;
+				}else uiAirTimer -= diff;
+				break;
+			}
+		}
+	}
 
-    void doBeacon(bool command = false)
-    {
-        if (command)
-        {
-             for(uint8 i = 0; i < getSpellData(SPELL_BEACON); ++i)
-             {
-                if (Unit* pTarget = doSelectRandomPlayer(SPELL_BEACON, false, 100.0f))
-                {
-                    if (doCast(SPELL_BEACON, pTarget) == CAST_OK)
-                        marked[i] = pTarget;
-                    else marked[i] = NULL;
-                }
-             }
-             conflagated = true;
-        }
-        else
-        {
-             me->InterruptNonMeleeSpells(true);
-             for(uint8 i = 0; i < getSpellData(SPELL_BEACON); ++i)
-             {
-                if (marked[i])
-                    doCast(SPELL_CONFLAGATION_2, marked[i]);
-                marked[i] = NULL;
-             }
-             doCast(SPELL_CONFLAGATION_1);
-             conflagated = false;
-        }
-    }
+	void KilledUnit(Unit *victim)
+	{
+		if(victim == me)
+			return;
+		DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
+	}
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!me->SelectHostileTarget() || !me->getVictim())
-            return;
-
-        switch (getStage())
-        {
-            case 0: //GROUND
-                 timedCast(SPELL_FLAME_BREATH, diff);
-                 timedCast(SPELL_ENRAGE, diff);
-                 if ( me->GetHealthPercent() <= 80.0f) setStage(1);
-                 break;
-
-            case 1: //Air phase start
-                 SetCombatMovement(false);
-                 me->InterruptNonMeleeSpells(true);
-                 SetFly(true);
-                 doBeacon(true);
-                 StartMovement(1);
-                 setStage(2);
-                 break;
-
-            case 2: // Wait for movement
-                 if (MovementStarted) return;
-                 doCast(SPELL_CONFLAGATION);
-                 DoScriptText(-1666404,me);
-                 setStage(3);
-                 break;
-
-            case 3: // Wait for cast finish
-                 if (!me->IsNonMeleeSpellCasted(false))
-                 {
-                     doBeacon(false);
-                     setStage(4);
-                 };
-                 break;
-
-            case 4: // Air phase
-                 timedCast(SPELL_FLAME_BREATH, diff);
-                 if (timedQuery(SPELL_BEACON, diff))
-                     {
-                         doBeacon(true);
-                         doCast(SPELL_CONFLAGATION);
-                     };
-                 if (conflagated && timedQuery(SPELL_CONFLAGATION_1, diff))
-                     {
-                         doBeacon(false);
-                     };
-                 if ( me->GetHealthPercent() <= 60.0f) setStage(5);
-                 break;
-
-            case 5: //Air phase end
-                 StartMovement(0);
-                 setStage(6);
-                 break;
-
-            case 6: // Wait for movement
-                 if (MovementStarted) return;
-                 SetFly(false);
-                 SetCombatMovement(true);
-                 me->GetMotionMaster()->Clear();
-                 me->GetMotionMaster()->MoveChase(me->getVictim());
-                 setStage(7);
-                 break;
-
-            case 7: //GROUND
-                 timedCast(SPELL_FLAME_BREATH, diff);
-                 timedCast(SPELL_ENRAGE, diff);
-                 if ( me->GetHealthPercent() <= 40.0f) setStage(8);
-                 break;
-
-            case 8: //Air phase start
-                 SetCombatMovement(false);
-                 me->InterruptNonMeleeSpells(true);
-                 SetFly(true);
-                 doBeacon(true);
-                 StartMovement(1);
-                 setStage(9);
-                 break;
-
-            case 9: // Wait for movement
-                 if (MovementStarted) return;
-                 doCast(SPELL_CONFLAGATION);
-                 DoScriptText(-1666404,me);
-                 setStage(10);
-                 break;
-
-            case 10: // Wait for cast finish
-                 if (!me->IsNonMeleeSpellCasted(false))
-                 {
-                     doBeacon(false);
-                     setStage(11);
-                 };
-                 break;
-
-            case 11: // Air phase
-                 timedCast(SPELL_FLAME_BREATH, diff);
-                 if (timedQuery(SPELL_BEACON, diff))
-                     {
-                         doBeacon(true);
-                         doCast(SPELL_CONFLAGATION);
-                     };
-                 if (conflagated && timedQuery(SPELL_CONFLAGATION_1, diff))
-                     {
-                         doBeacon(false);
-                     };
-                 if ( me->GetHealthPercent() <= 20.0f) setStage(12);
-                 break;
-
-            case 12: //Air phase end
-                 StartMovement(0);
-                 setStage(13);
-                 break;
-
-            case 13: // Wait for movement
-                 if (MovementStarted) return;
-                 SetFly(false);
-                 SetCombatMovement(true);
-                 me->GetMotionMaster()->Clear();
-                 me->GetMotionMaster()->MoveChase(me->getVictim());
-                 setStage(14);
-                 break;
-
-            case 14: //GROUND
-                 timedCast(SPELL_FLAME_BREATH, diff);
-                 timedCast(SPELL_ENRAGE, diff*2);
-                 break;
-
-            default:
-                break;
-        }
-
-        DoMeleeAttackIfReady();
-    }
+	void JustDied(Unit*)
+	{
+		if(pInstance) pInstance->SetData(DATA_RAGEFIRE_EVENT, DONE);
+		DoScriptText(SAY_DEATH, me);
+	}
 };
 
-CreatureAI* GetAI_boss_ragefire(Creature* pCreature)
+CreatureAI* GetAI_boss_ragefire(Creature *pCreature)
 {
-    return new boss_ragefireAI(pCreature);
+	return new boss_ragefireAI(pCreature);
 }
 
 void AddSC_boss_ragefire()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ragefire";
-    newscript->GetAI = &GetAI_boss_ragefire;
-    newscript->RegisterSelf();
+	Script* newscript;
+
+	newscript = new Script;
+	newscript->Name = "boss_ragefire";
+	newscript->GetAI = &GetAI_boss_ragefire;
+	newscript->RegisterSelf();
 }
