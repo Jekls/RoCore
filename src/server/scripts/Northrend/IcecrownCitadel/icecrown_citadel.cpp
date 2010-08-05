@@ -142,10 +142,9 @@ struct  npc_the_damnedAI: public ScriptedAI
         if (!UpdateVictim())
             return;
 
- //disabled until crash is solved
    if (m_uiBoneTimer <= diff)
         {
-            DoCast(me, SPELL_BONEFLURRY);
+       //     DoCast(me, SPELL_BONEFLURRY);       // This spell is bugged so we will disable it for the moment.
             m_uiBoneTimer = 9000;
         } else m_uiBoneTimer -= diff;
 
@@ -230,13 +229,14 @@ struct  npc_death_bound_wardAI: public ScriptedAI
     {
         m_uiShoutTimer = 8000;
         m_uiSlashTimer = 8000;
+        // Hack until properly scripted
+        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
     void EnterCombat(Unit* who)
     {
-        // Hack until properly scripted
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
     }
 
     void UpdateAI(const uint32 diff)
