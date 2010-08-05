@@ -5847,33 +5847,34 @@ UPDATE gameobject SET phasemask = 3 WHERE id IN (187684, 187685, 187686, 187687)
 UPDATE creature SET phaseMask = 2 WHERE id = 25479;
 UPDATE gameobject SET phasemask = 3 WHERE id = 187683;
 -- A suitable test Subject
-DELETE FROM spell_script_target WHERE entry = 45995;
-INSERT INTO spell_script_target (entry, type, targetEntry) VALUES (45995, 1, 25381);
+DELETE FROM conditions  WHERE SourceEntry = 45995;
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES (13, 0, 45995, 18, 1, 25381);
 -- Soul of the Decursed
 UPDATE quest_template SET ReqCreatureOrGOId1 = 25814, ReqSpellCast1 = 46485 WHERE entry = 11899;
 -- chain di quest: Prison Break
-DELETE FROM spell_script_target WHERE entry IN (45441, 45611, 45634);
-INSERT INTO spell_script_target (entry, type, targetEntry) VALUES 
-(45441, 2, 187561),
-(45611, 2, 25474),
-(45634, 2, 25478);
-DELETE FROM `creature_loot_template` WHERE (`entry`=25584) AND (`item`=34909);
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES (25584, 34909, -100, 0, 1, 1, 0, 0, 0);
+DELETE FROM conditions  WHERE SourceEntry IN (45441, 45611, 45634);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES
+(13, 0, 45441, 18, 2, 187561),
+(13, 0, 45611, 18, 2, 25474),
+(13, 0, 45634, 18, 2, 25478);
+DELETE FROM `conditions` WHERE (`SourceGroup`=25584) AND (`SourceEntry`=34909);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES (1, 25584, 34909, 0, 0, 0);
 -- The Honored Dead
 UPDATE quest_template SET ReqCreatureOrGOId1 = 25342, ReqSpellCast1 = 45474 WHERE entry = 11593;
 -- Envoy Ripfang
 UPDATE `creature_template` SET `unit_flags` = 131072 WHERE `entry` = 26441;
 -- Rifle the Bodies
 UPDATE `creature_template` SET `questItem2` = 35783 WHERE `entry` = 26455;
-DELETE FROM `creature_loot_template` WHERE (`entry`=26455) AND (`item`=35783);
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES (26455, 35783, -100, 0, 1, 1, 0, 0, 0);
+DELETE FROM `conditions` WHERE (`SourceGroup`=26455) AND (`SourceEntry`=35783);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES (1, 26455, 35783, 0, 0, 0);
 -- Strenghten of the Ancients
 UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` = 26421;
 -- Lumber Hack
 UPDATE `gameobject_template` SET `type` = 22, `data0` = 47939, `data1` = 1, `data4` = 0 WHERE `entry` = 188539;
 -- Slim Pickings
-DELETE FROM `creature_loot_template` WHERE (`entry`=26291) AND (`item`=36765);
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES (26291, 36765, -100, 0, 1, 1, 0, 0, 0);
+DELETE FROM `conditions` WHERE (`SourceGroup`=26291) AND (`SourceEntry`=36765);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES (1, 26291, 36765, 0, 0, 0);
+
 UPDATE `creature_template` SET `questItem1` = 36765 WHERE `entry` = 26291;
 -- Doing your Duty
 UPDATE `gameobject_template` SET `type` = 22, `data0` = 48330, `data1` = 1, `data3` = 0 WHERE `entry` = 188666;
@@ -5919,17 +5920,19 @@ UPDATE `creature_template` SET `unit_flags` = 0  WHERE `entry` = 26447;
 -- Congratulation dipendente da Troll Patrols
 UPDATE quest_template SET PrevQuestId = 12587 WHERE entry = 12604;
 -- Avool's Sword of Jin
-DELETE FROM `creature_loot_template` WHERE item = 44311;
-INSERT INTO `creature_loot_template` VALUES 
-(30988,44311,0.5,1,0,1,1,0,0,0),
-(31262,44311,0.5,1,0,1,1,0,0,0),
-(29376,44311,0.5,1,0,1,1,0,0,0),
-(34728,44311,0.5,1,0,1,1,0,0,0);
+
+DELETE FROM `conditions` WHERE (`SourceEntry`=44311);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES
+(1, 30988, 44311, 0, 0, 0),
+(1, 31262, 44311, 0, 0, 0),
+(1, 29376, 44311, 0, 0, 0),
+(1, 34728, 44311, 0, 0, 0);
+
 -- Quest Vargul:
 UPDATE creature_template SET KillCredit1 = 29882 WHERE NAME LIKE "Vargul %" AND maxlevel < 76;
 -- Quest Gymer:
-DELETE FROM spell_script_target WHERE entry = 55525;
-INSERT INTO spell_script_target VALUES (55525, 1, 29928);
+DELETE FROM conditions  WHERE SourceEntry = 55525;
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES (13, 0, 55525, 18, 1, 29928);
 UPDATE quest_template SET ReqSpellCast1 = 55525, ReqCreatureOrGOCount1 = 0 WHERE entry = 12916;
 -- Troll Patrol:
 UPDATE creature_template SET npcflag = npcflag | 1 WHERE entry = 28042;
@@ -5948,28 +5951,28 @@ UPDATE quest_template SET ReqCreatureOrGOCount1 = 0 WHERE entry = 13064;
 UPDATE creature_template SET faction_H = 14, faction_A = 14 WHERE entry = 29503;
 UPDATE quest_template SET ReqCreatureOrGOid1 = 29984, ReqCreatureOrGOid2 = 29978 WHERE entry = 13005;
 UPDATE quest_template SET SpecialFlags = 0, ReqSourceId2 = 0 WHERE entry = 13047;
-DELETE FROM spell_script_target WHERE entry = 58151;
-INSERT INTO spell_script_target (entry, type, targetEntry) VALUES 
-(58151, 1, 30894);
+DELETE FROM conditions  WHERE SourceEntry = 58151;
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES (13, 0, 58151, 18, 1, 30894);
 -- Planning for the future
 UPDATE creature_template SET IconName='Pickup' WHERE entry=26200;
 DELETE FROM npc_spellclick_spells WHERE npc_entry=26200;
 INSERT INTO npc_spellclick_spells VALUES (26200, 46773, 11960, 1, 11960, 3, 0, 0, 0),(26200, 46167, 11960, 1, 11960, 1, 0, 0, 0);
 -- Some Make Lemonade, Some Make Liquor
-DELETE FROM `gameobject_loot_template` WHERE (`entry`=190622);
-INSERT INTO `gameobject_loot_template` VALUES 
-(190622, 38656, -100, 1, 0, 1, 1, 0, 0, 0),
-(190622, 38653, -100, 1, 0, 1, 1, 0, 0, 0),
-(190622, 38655, -100, 1, 0, 1, 1, 0, 0, 0);
+DELETE FROM `conditions` WHERE (`SourceGroup`=190622);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES
+(4, 190622, 38656, 0, 0, 0),
+(4, 190622, 38653, 0, 0, 0),
+(4, 190622, 38655, 0, 0, 0);
+
 UPDATE gameobject_template SET type = 3 WHERE entry = 190622;
 UPDATE gameobject_template SET data0 = 1690, data10 = 0, data5 = 0 WHERE entry = 190622;
 UPDATE quest_template SET Method = 0 WHERE entry = 12644;
 UPDATE quest_template SET ReqItemId1 = 0, ReqItemCount1 = 0 WHERE entry = 12644;
-DELETE FROM spell_script_target WHERE entry = 51962;
-INSERT INTO spell_script_target VALUES
-(51962, 1, 27986),
-(51962, 1, 28047),
-(51962, 1, 28568);
+DELETE FROM conditions  WHERE SourceEntry = 51962;
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES
+ (13, 0, 51962, 18, 1, 27986),
+ (13, 0, 51962, 18, 1, 28047),
+ (13, 0, 51962, 18, 1, 28568);
 DELETE FROM `creature_questrelation` WHERE `quest` = 13571;
 DELETE FROM `gameobject_questrelation` WHERE `quest` = 13571;
 UPDATE `item_template` SET `StartQuest`=0 WHERE `StartQuest` = 13571;
@@ -5980,16 +5983,16 @@ DELETE FROM `gameobject_involvedrelation` WHERE `quest` = 13571;
 INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (32516, 13571);
 UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=32516;
 -- Proof of Demise: The Prophet Tharon'ja
-DELETE FROM `creature_loot_template` WHERE `entry` = 31360 AND `item` = 43670;
-INSERT INTO `creature_loot_template`
-(`entry`,`item`,`ChanceOrQuestChance`,`lootmode`,`groupid`,`mincountOrRef`,`maxcount`,`lootcondition`,`condition_value1`,`condition_value2`) VALUES
-(31360, 43670, -100, 1, 0, 1, 1, 0, 0, 0);
+DELETE FROM `conditions` WHERE (`SourceGroup`=31360) AND (`SourceEntry`=43670);
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES (1, 31360, 43670, 0, 0, 0);
 -- Prisoners of Wyrmskull
 UPDATE `item_template` SET `spellid_1` = 43094 WHERE `entry` = 33308;
 -- Scare the Guano Out of Them!
-DELETE FROM `creature_loot_template` WHERE entry = 23959 AND `item`=33084;
-INSERT INTO `creature_loot_template` VALUES
-(23959, 33084, -100, 1, 0, 1, 1, 0, 0, 0);
+
+DELETE FROM `conditions` WHERE (`SourceGroup`=23959) AND `SourceEntry`=33084;
+INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2) VALUES
+(1, 23959, 33084, 0, 0, 0);
+
 -- The Lost Shield of the Aesirites
 DELETE FROM `creature` WHERE `id`=24910;
 INSERT INTO `creature` 
