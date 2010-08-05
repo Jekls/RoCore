@@ -5830,15 +5830,15 @@ INSERT INTO `creature` VALUES
 (123548, 37774, 658, 3, 128, 0, 0, 1076.62, 209.063, 628.156, 3.79407, 7200, 0, 0, 100800, 264420, 0, 0),
 (123584, 37779, 658, 3, 64, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 126000, 0, 0, 0),
 (123585, 37582, 658, 3, 128, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 60480, 176280, 0, 0),
-(5555570, 36661, 658, 3, 1, 0, 0, 987.517, 172.886, 634.013, 5.77039, 300, 0, 0, 3235440, 41690, 0, 0);
+(135304, 36661, 658, 3, 1, 0, 0, 987.517, 172.886, 634.013, 5.77039, 300, 0, 0, 3235440, 41690, 0, 0);
 
 ALTER TABLE db_version CHANGE COLUMN required_280_world_pit_of_saron required_295_world_forge_of_souls bit;
 
 DELETE FROM `creature` where `id` IN (38161,38160);
 -- Lady Sylvanas Windrunner
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('8281021', '38161', '632', '3', '64', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82810', '38161', '632', '3', '64', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 -- Lady Jaina Proudmoore
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('828091', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82809', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 
 ALTER TABLE db_version CHANGE COLUMN required_295_world_forge_of_souls required_370_world_north_quest bit;
 
