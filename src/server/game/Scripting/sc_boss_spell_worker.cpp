@@ -105,7 +105,7 @@ void BSWScriptedAI::_loadSpellTable()
 
         _bossSpellCount = uiCount;
 
-        delete Result;
+//        delete Result;
 
         _fillEmptyDataField();
 
@@ -261,7 +261,7 @@ CanCastResult BSWScriptedAI::_BSWSpellSelector(uint8 m_uiSpellIdx, Unit* pTarget
                                 break;
                             }
                          pTarget->GetPosition(fPosX, fPosY, fPosZ);
-                         pTarget->GetRandomPoint(fPosX, fPosY, fPosZ, urand((uint32)pSpell->LocData.x, (uint32)pSpell->LocData.y), fPosX, fPosY, fPosZ);
+                       //  pTarget->GetRandomPoint(fPosX, fPosY, fPosZ, urand((uint32)pSpell->LocData.x, (uint32)pSpell->LocData.y), fPosX, fPosY, fPosZ);
                                 if ((int)fPosZ == 0)
                                 {
                                     sLog.outError("BSW: CAST_ON_RANDOM_POINT FAILED: Positon Z is NULL. Strange bug");
