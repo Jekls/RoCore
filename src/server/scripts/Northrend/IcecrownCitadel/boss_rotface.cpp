@@ -181,7 +181,7 @@ struct boss_rotfaceAI : public ScriptedAI
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             DoScriptText(SAY_SLIME_SPRAY, me);
-            me->MonsterTextEmote(EMOTE_SLIME_SPRAY,NULL);
+            me->MonsterTextEmote(EMOTE_SLIME_SPRAY 0, true);
             DoCast(SPELL_SLIME_SPRAY);
             m_uiSlimeSprayTimer = 26000;
         } else m_uiSlimeSprayTimer -= diff;
@@ -389,7 +389,7 @@ struct npc_ooze_bigAI : public ScriptedAI
             if (UnstableAura->GetStackAmount() == 5)
             {
                 DoCast(SPELL_UNSTABLE_EXPLOSION);
-                me->MonsterTextEmote(EMOTE_BIG_OOZE,NULL);
+                me->MonsterTextEmote(EMOTE_BIG_OOZE 0, true);
                 me->ForcedDespawn();
             }
         }
