@@ -53,8 +53,8 @@
 #define NUM_DATABASES 3
 
 char remotes[NUM_REMOTES][MAX_REMOTE] = {
-    "git@github.com:myh/RoCore.git",
-    "git://github.com/myh/RoCore.git"        // used for fetch if present
+    "git@github.com:RoCore/RoCore.git",
+    "git://github.com/RoCore/RoCore.git"        // used for fetch if present
 };
 
 char remote_branch[MAX_REMOTE] = "master";
