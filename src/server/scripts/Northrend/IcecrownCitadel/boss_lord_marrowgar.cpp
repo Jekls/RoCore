@@ -239,7 +239,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
 
                     //deal damage to target
                     me->DealDamage(i->getSource(), damage, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    me->SpellNonMeleeDamageLog(i->getSource(), SPELL_BONE_STORM, damage);
+                    me->SpellNonMeleeDamageLog(i->getSource(), RAID_MODE(SPELL_BONE_STORM_10_NORMAL,SPELL_BONE_STORM_25_NORMAL,SPELL_BONE_STORM_10_HEROIC,SPELL_BONE_STORM_25_HEROIC), damage);
                 }
                         }
                 }
