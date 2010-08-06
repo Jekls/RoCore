@@ -253,8 +253,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
 
 bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
 {
-    // unable to add passenger in BG or Arena due to avoid exploit abusing
-    if (unit->GetVehicle() != this || unit->GetTypeId() == TYPEID_PLAYER && unit->GetMap()->IsBattleGroundOrArena())
+    if (unit->GetVehicle() != this)
         return false;
 
     SeatMap::iterator seat;
