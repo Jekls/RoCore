@@ -33,6 +33,7 @@ enum Yells
     SAY_BERSERK                = -1666023,
     SAY_SLIME_SPRAY            = -1666017,
     SAY_EXPLOSION              = -1666018,
+    SAY_PRECIOUS               = -1666015,
 };
 
 enum Creatures
@@ -65,6 +66,9 @@ enum Spells
     SPELL_UNSTABLE_OOZE        = 69558,
     SPELL_UNSTABLE_EXPLOSION   = 71209,
     SPELL_MERGE_OOZE           = 69889,
+    SPELL_MORTAL_WOUND         = 71159,
+    SPELL_DECIMATE             = 71123,
+    SPELL_AWAKEN_PLAGUED_ZOMBIES = 71159,
 };
 
 Creature* pBigooze;
@@ -95,6 +99,7 @@ Creature* pLittleooze;
 
 #define EMOTE_BIG_OOZE "Big Ooze can barely maintain its form!"
 #define EMOTE_SLIME_SPRAY "Rotface begins to cast Slime Spray!"
+#define EMOTE_DECIMATE "Precious cries out with a loud, baying howl!"
 
 struct boss_rotfaceAI : public ScriptedAI
 {
@@ -102,7 +107,6 @@ struct boss_rotfaceAI : public ScriptedAI
     {
         m_pInstance = pCreature->GetInstanceData();
     }
-
     ScriptedInstance* m_pInstance;
     SummonList summons;
 
@@ -112,6 +116,7 @@ struct boss_rotfaceAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     uint32 m_uiLittleOozeTimer;
     uint32 m_uiResetTimer;
+    uint64 uiPutricide;
 
     void Reset()
     {
@@ -120,7 +125,7 @@ struct boss_rotfaceAI : public ScriptedAI
         m_uiMutatedInfectionTimer = 25000;
         m_uiBerserkTimer = 600000;
         m_uiLittleOozeTimer = 30000;
-
+        uiPutricide = 0;
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);
     }
@@ -128,7 +133,9 @@ struct boss_rotfaceAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH, me);
-        DoScriptText(SAY_DEATH_2, me);
+        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+        DoScriptText(SAY_DEATH_2, pPutricide);
+        me->PlayDirectSound(17146);
 
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, DONE);
@@ -195,27 +202,37 @@ struct boss_rotfaceAI : public ScriptedAI
 
         if (m_uiFloodTimer <= diff)
         {
+            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
             switch (rand() % 4)
             {
             case 0:
-                DoScriptText(SAY_PUTRI_SLIME, me);
+
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME, pPutricide);
+                me->PlayDirectSound(17126);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR_X, LR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR2_X, LR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
             case 1:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME, pPutricide);
+                me->PlayDirectSound(17126);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR_X, UR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR2_X, UR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME, me);
                 break;
             case 2:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
+                me->PlayDirectSound(17123);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL_X, LL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL2_X, LL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME_2, me);
                 break;
             case 3:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
+                me->PlayDirectSound(17123);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL2_X, UL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME_2, me);
                 break;
             }
             m_uiFloodTimer = 25000;
@@ -501,6 +518,68 @@ struct npc_flood_oozeAI : public ScriptedAI
     }
 };
 
+struct npc_preciousAI : public ScriptedAI
+{
+    npc_preciousAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = pCreature->GetInstanceData();
+    }
+    ScriptedInstance* m_pInstance;
+    uint32 m_uiMortalWoundTimer;
+    uint32 m_uiDecimateTimer;
+    uint32 m_uiAwakenPlaguedZomiesTimer;
+    uint64 uiRotface;
+    void Reset()
+    {
+   m_uiMortalWoundTimer          = 1500;
+   m_uiDecimateTimer             = 23000;
+   m_uiAwakenPlaguedZomiesTimer  = 46000;
+   uiRotface = 0;
+
+    }
+
+    void EnterCombat(Unit* who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!UpdateVictim())
+            return;
+
+        if (m_uiMortalWoundTimer <= diff)
+        {
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            DoCast(pTarget, SPELL_MORTAL_WOUND);
+            m_uiMortalWoundTimer = 10000;
+        } else m_uiMortalWoundTimer -= diff;
+
+        if (m_uiDecimateTimer <= diff)
+        {
+            me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            DoCast(pTarget, SPELL_DECIMATE);
+            m_uiDecimateTimer = 17800;
+        } else m_uiDecimateTimer -= diff;
+
+        if (m_uiAwakenPlaguedZomiesTimer<= diff)
+        {
+            DoCast(me, SPELL_AWAKEN_PLAGUED_ZOMBIES);
+            m_uiAwakenPlaguedZomiesTimer = 12000;
+        } else m_uiAwakenPlaguedZomiesTimer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+    void JustDied(Unit* who)
+    {
+        uiRotface = (m_pInstance ? m_pInstance->GetData64(DATA_ROTFACE) : 0);
+        if (Creature *pRotface = me->GetCreature(*me, uiRotface))
+        DoScriptText(SAY_PRECIOUS, pRotface);
+        me->PlayDirectSound(16993);
+    }
+};
+
+
 CreatureAI* GetAI_boss_rotface(Creature* pCreature)
 {
     return new boss_rotfaceAI(pCreature);
@@ -523,6 +602,10 @@ CreatureAI* GetAI_npc_sticky_ooze(Creature* pCreature)
 CreatureAI* GetAI_npc_flood_ooze(Creature* pCreature)
 {
     return new npc_flood_oozeAI(pCreature);
+}
+CreatureAI* GetAI_npc_precious(Creature* pCreature)
+{
+    return new npc_preciousAI(pCreature);
 }
 void AddSC_boss_rotface()
 {
@@ -551,5 +634,10 @@ void AddSC_boss_rotface()
     NewScript = new Script;
     NewScript->Name = "npc_flood_ooze";
     NewScript->GetAI = &GetAI_npc_flood_ooze;
+    NewScript->RegisterSelf();
+
+    NewScript = new Script;
+    NewScript->Name = "npc_precious";
+    NewScript->GetAI = &GetAI_npc_precious;
     NewScript->RegisterSelf();
 }
