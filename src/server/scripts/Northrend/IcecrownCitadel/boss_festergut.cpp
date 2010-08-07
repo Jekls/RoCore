@@ -223,11 +223,11 @@ struct boss_festergutAI : public ScriptedAI
         {
             if (m_uiGasSporesTimer < uiDiff)
             {
-                DoScriptText(SAY_GAS_SPORES, me);
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
                     {
                         DoCast(pTarget, SPELL_GAS_SPORES);
+                        me->PlayDirectSound(16911);
                         me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
                     }
                 m_uiGasSporesTimer = 23000;
@@ -237,6 +237,7 @@ struct boss_festergutAI : public ScriptedAI
         if (m_uiPungentBlightTimer < uiDiff)
         {
             me->MonsterTextEmote(EMOTE_Pungent_Blight, 0, true);
+            DoScriptText(SAY_PUNGENT_BLIGHT_1, me);
             DoCastAOE(SPELL_PUNGENT_BLIGHT);
             m_uiPungentBlightTimer = 120000;
             m_uiInhaleBlightTimer = 33000;
