@@ -572,7 +572,7 @@ struct npc_preciousAI : public ScriptedAI
     }
     void JustDied(Unit* who)
     {
-        uiRotface = (pInstance ? pInstance->GetData64(DATA_ROTFACE) : 0);
+        uiRotface = (m_pInstance ? m_pInstance->GetData64(DATA_ROTFACE) : 0);
         if (Creature *pRotface = me->GetCreature(*me, uiRotface))
         DoScriptText(SAY_PRECIOUS, pRotface);
         me->PlayDirectSound(16993);
@@ -603,7 +603,7 @@ CreatureAI* GetAI_npc_flood_ooze(Creature* pCreature)
 {
     return new npc_flood_oozeAI(pCreature);
 }
-CreatureAI* GetAI_precious(Creature* pCreature)
+CreatureAI* GetAI_npc_precious(Creature* pCreature)
 {
     return new npc_preciousAI(pCreature);
 }
