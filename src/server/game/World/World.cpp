@@ -55,6 +55,7 @@
 #include "AuctionHouseBot.h"
 #include "WaypointMovementGenerator.h"
 #include "VMapFactory.h"
+#include "GlobalEvents.h"
 #include "GameEventMgr.h"
 #include "PoolMgr.h"
 #include "DatabaseImpl.h"
@@ -599,6 +600,18 @@ void World::LoadConfigSettings(bool reload)
     ///- Read other configuration items from the config file
 
     m_configs[CONFIG_DURABILITY_LOSS_IN_PVP] = sConfig.GetBoolDefault("DurabilityLoss.InPvP", false);
+
+	// movement anticheat
+	m_MvAnticheatEnable                     = sConfig.GetBoolDefault("Anticheat.Movement.Enable",false);
+	m_MvAnticheatKick                       = sConfig.GetBoolDefault("Anticheat.Movement.Kick",false);
+	m_MvAnticheatAlarmCount                 = (uint32)sConfig.GetIntDefault("Anticheat.Movement.AlarmCount", 5);
+	m_MvAnticheatAlarmPeriod                = (uint32)sConfig.GetIntDefault("Anticheat.Movement.AlarmTime", 5000);
+	m_MvAntiCheatBan                        = (unsigned char)sConfig.GetIntDefault("Anticheat.Movement.BanType",0);
+	m_MvAnticheatBanTime                    = sConfig.GetStringDefault("Anticheat.Movement.BanTime","1m");
+	m_MvAnticheatGmLevel                    = (unsigned char)sConfig.GetIntDefault("Anticheat.Movement.GmLevel",0);
+	m_MvAnticheatKill                       = sConfig.GetBoolDefault("Anticheat.Movement.Kill",false);
+	m_MvAnticheatMaxXYT                     = sConfig.GetFloatDefault("Anticheat.Movement.MaxXYT",0.04f);
+	m_MvAnticheatIgnoreAfterTeleport        = (uint16)sConfig.GetIntDefault("Anticheat.Movement.IgnoreSecAfterTeleport",10);
 
     m_configs[CONFIG_COMPRESSION] = sConfig.GetIntDefault("Compression", 1);
     if (m_configs[CONFIG_COMPRESSION] < 1 || m_configs[CONFIG_COMPRESSION] > 9)
@@ -1244,7 +1257,10 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME]       = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.StartTime", 30);
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME]      = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.BattleTime", 30);
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL]         = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.Interval", 150);
-    m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR]     = sConfig.GetBoolDefault("OutdoorPvP.Wintergrasp.CustomHonorRewards", false);
+	m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_REQ_PLAYER_LVL]   = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.ReqPlayerLvl", 78);
+	m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_REQ_PLAYERS_PER_SIDE] = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.ReqPlayersPerSide", 5);
+	m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_FLYING]               = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.Flying", 0);
+	m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR]     = sConfig.GetBoolDefault("OutdoorPvP.Wintergrasp.CustomHonorRewards", false);
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE]       = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleWin", 3000);
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE]      = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleLose", 1250);
     m_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER]    = sConfig.GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDamageTower", 750);
@@ -1733,6 +1749,7 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Transport NPCs...");
     sMapMgr.LoadTransportNPCs();
 
+    //Not sure if this can be moved up in the sequence (with static data loading) as it uses MapManager
     sLog.outString("Loading Transports...");
     sMapMgr.LoadTransports();
 
@@ -1915,6 +1932,9 @@ void World::Update(uint32 diff)
 
     if (m_gameTime > m_NextRandomBGReset)
         ResetRandomBG();
+
+	if (m_gameTime > m_NextWGBattleTime)
+		StartWGBattle();
 
     /// <ul><li> Handle auctions when the timer has passed
     if (m_timers[WUPDATE_AUCTIONS].Passed())
@@ -2570,7 +2590,7 @@ void World::_UpdateRealmCharCount(QueryResult_AutoPtr resultCharCount, uint32 ac
 
 void World::InitWeeklyQuestResetTime()
 {
-    time_t wstime = uint64(sWorld.getWorldState(WS_WEEKLY_QUEST_RESET_TIME));
+    time_t wstime = uint64(sWorld.getWorldState(WS_OPVP_WG_NEXT_BATTLE_TIME));
     time_t curtime = time(NULL);
     m_NextWeeklyQuestReset = wstime < curtime ? curtime : time_t(wstime);
 }
@@ -2638,6 +2658,30 @@ void World::InitRandomBGResetTime()
 
     if (!bgtime)
         sWorld.setWorldState(WS_BG_DAILY_RESET_TIME, uint64(m_NextRandomBGReset));
+}
+
+void World::InitWGNextBattleTime()
+{
+	time_t wgtime = uint64(sWorld.getWorldState(WS_OPVP_WG_NEXT_BATTLE_TIME));
+
+	if (!wgtime)
+		m_NextWGBattleTime = time_t(time(NULL));         // game time not yet init
+
+	time_t curTime = time(NULL);
+	tm localTm = *localtime(&curTime);
+	localTm.tm_hour = 0;
+	localTm.tm_min  = getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL);
+	localTm.tm_sec  = 0;
+
+	time_t nextWGBattleTime = mktime(&localTm);
+
+	if (curTime >= nextWGBattleTime)
+		nextWGBattleTime += getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL) * MINUTE;
+
+	m_NextWGBattleTime = wgtime < curTime ? nextWGBattleTime - (getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL) * MINUTE) : nextWGBattleTime;
+
+	if (!wgtime)
+		sWorld.setWorldState(WS_OPVP_WG_NEXT_BATTLE_TIME, uint64(m_NextWGBattleTime));
 }
 
 void World::ResetDailyQuests()
@@ -2806,4 +2850,35 @@ void World::SendWintergraspState()
                 itr->second->GetPlayer()->SendInitWorldStates(itr->second->GetPlayer()->GetZoneId(), itr->second->GetPlayer()->GetAreaId());
             }
     }
+}
+
+void World::StartWGBattle()
+{
+
+}
+
+void World::SendWintergraspState()
+{
+	OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
+	if (!pvpWG)
+		return;
+
+	for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+	{
+		if (!itr->second || !itr->second->GetPlayer() || !itr->second->GetPlayer()->IsInWorld())
+			continue;
+
+		if (pvpWG->isWarTime())
+		{
+			// "Battle in progress"
+			itr->second->GetPlayer()->SendUpdateWorldState(ClockWorldState[1], (time(NULL)));
+		} else
+			// Time to next battle
+		{
+			pvpWG->SendInitWorldStatesTo(itr->second->GetPlayer());
+			itr->second->GetPlayer()->SendUpdateWorldState(ClockWorldState[1], (time(NULL) + pvpWG->GetTimer()));
+			// Hide unneeded info which in center of screen
+			itr->second->GetPlayer()->SendInitWorldStates(itr->second->GetPlayer()->GetZoneId(), itr->second->GetPlayer()->GetAreaId());
+		}
+	}
 }

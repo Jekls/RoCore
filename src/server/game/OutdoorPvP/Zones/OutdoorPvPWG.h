@@ -51,13 +51,14 @@ enum OutdoorPvPWGSpell
     SPELL_DAMAGED_BUILDING                       = 59201,
     SPELL_INTACT_BUILDING                        = 59203,
 
-	SPELL_TELEPORT_ALLIENCE_CAMP                 = 58632,
-	SPELL_TELEPORT_HORDE_CAMP                    = 58633,
-    SPELL_TELEPORT_FORTRESS                      = 59096,
+    SPELL_TELEPORT_BRIDGE                        = 59096,
+    SPELL_TELEPORT_FORTRESS                      = 60035,
 
     SPELL_TELEPORT_DALARAN                       = 53360,
     SPELL_VICTORY_AURA                           = 60044,
 };
+
+
 
 const uint16 GameEventWintergraspDefender[2] = {50, 51};
 
@@ -71,12 +72,12 @@ enum OutdoorPvP_WG_Sounds
     OutdoorPvP_WG_SOUND_NEAR_VICTORY            = 8456,
     OutdoorPvP_WG_SOUND_HORDE_WINS              = 8454,
     OutdoorPvP_WG_SOUND_ALLIANCE_WINS           = 8455,
-    OutdoorPvP_WG_SOUND_WORKSHOP_Horde          = 6205, // РІСЂРµРјСЏ СѓР±РёРІР°С‚СЊ РѕСЂРґР°
-    OutdoorPvP_WG_SOUND_WORKSHOP_ALLIANCE       = 6298, // Рє РѕСЂСѓР¶РёСЋ Р°Р»СЊСЏРЅСЃ
+    OutdoorPvP_WG_SOUND_WORKSHOP_Horde          = 6205, // время убивать орда
+    OutdoorPvP_WG_SOUND_WORKSHOP_ALLIANCE       = 6298, // к оружию альянс
     OutdoorPvP_WG_HORDE_CAPTAIN                 = 8333,
     OutdoorPvP_WG_ALLIANCE_CAPTAIN              = 8232,
 //    OutdoorPvP_WG_SOUND_START_BATTLE            = 11803,   //L70ETC Concert
-    OutdoorPvP_WG_SOUND_START_BATTLE            = 3439, //Standart BG Start sound
+    OutdoorPvP_WG_SOUND_START_BATTLE            = 3439, //Standart Start BG sound
 };
 
 enum DataId
@@ -108,6 +109,7 @@ enum OutdoorPvPWGCreType
     CREATURE_SIEGE_VEHICLE,
     CREATURE_TURRET,
     CREATURE_ENGINEER,
+    CREATURE_CONTROL_ARMS,
     CREATURE_GUARD,
     CREATURE_SPECIAL,
     CREATURE_SPIRIT_GUIDE,
@@ -195,7 +197,7 @@ struct BuildingState
     void SetTeam(TeamId t)
     {
         team = t;
-        if(graveTeam)
+        if (graveTeam)
             if (uint32 newTeam = TeamId2Team[t])
                 *graveTeam = newTeam;
     }
@@ -258,7 +260,6 @@ class OutdoorPvPWG : public OutdoorPvP
         void RelocateDeadPlayers(Creature *cr);
         // BG end
         void SendInitWorldStatesTo(Player *player = NULL) const;
-        uint32 m_timer;
     protected:
         // Temporal BG specific till 3.2
         std::vector<uint64> m_ResurrectQueue;               // Player GUID
@@ -286,6 +287,7 @@ class OutdoorPvPWG : public OutdoorPvP
 
         bool m_wartime;
         bool m_changeDefender;
+        uint32 m_timer;
         uint32 m_clock[2];
         uint32 m_workshopCount[2];
         uint32 m_towerDestroyedCount[2];

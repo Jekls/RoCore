@@ -5154,6 +5154,9 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     if (canFly && v_map == 571 && !unitTarget->ToPlayer()->HasSpell(54197))
                         canFly = false;
 
+                    if(canFly && unitTarget->GetZoneId() == 4197 && pvpWG->isWarTime() && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
+                        canFly = false;
+
                     float x, y, z;
                     unitTarget->GetPosition(x, y, z);
                     uint32 areaFlag = unitTarget->GetBaseMap()->GetAreaFlag(x, y, z);
@@ -5197,6 +5200,9 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                         canFly = false;
 
                     if (canFly && v_map == 571 && !unitTarget->ToPlayer()->HasSpell(54197))
+                        canFly = false;
+                        
+                    if(canFly && unitTarget->GetZoneId() == 4197 && pvpWG->isWarTime() && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
                         canFly = false;
 
                     float x, y, z;
@@ -5584,6 +5590,9 @@ void Spell::EffectScriptEffect(uint32 effIndex)
 
                     if (canFly && v_map == 571 && !unitTarget->ToPlayer()->HasSpell(54197))
                         canFly = false;
+                        
+                    if(canFly && unitTarget->GetZoneId() == 4197 && pvpWG->isWarTime() && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
+                        canFly = false;
 
                     float x, y, z;
                     unitTarget->GetPosition(x, y, z);
@@ -5629,6 +5638,9 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                         canFly = false;
 
                     if (canFly && v_map == 571 && !unitTarget->ToPlayer()->HasSpell(54197))
+                        canFly = false;
+                        
+                    if(canFly && unitTarget->GetZoneId() == 4197 && pvpWG->isWarTime() && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
                         canFly = false;
 
                     float x, y, z;
@@ -5692,6 +5704,9 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                         canFly = false;
 
                     if (canFly && v_map == 571 && !unitTarget->ToPlayer()->HasSpell(54197))
+                        canFly = false;
+                        
+                    if(canFly && unitTarget->GetZoneId() == 4197 && pvpWG->isWarTime() && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
                         canFly = false;
 
                     float x, y, z;
@@ -7872,24 +7887,30 @@ void Spell::EffectPlayerNotification(uint32 /*eff_idx*/)
 
     switch(m_spellInfo->Id)
     {
-        case 58730: // Restricted Flight Area
-			{
-             if (pvpWG->isWarTime())
-			 {
-             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
-             unitTarget->PlayDirectSound(9417); // Fel Reaver sound
-             unitTarget->MonsterTextEmote("The air is too thin in Wintergrasp for normal flight. You will be ejected in 9 sec.",unitTarget->GetGUID(),true);
-             break;
-			 } else break;
-			}
-         case 58600: // Restricted Flight Area
-			{
-             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
-             unitTarget->PlayDirectSound(9417); // Fel Reaver sound
-             unitTarget->MonsterTextEmote("The air over Dalaran is protected. You will be ejected in 9 sec.",unitTarget->GetGUID(),true);
-             break;
-			}
-     }
+        case 58730: // Restricted Flight Area in Wintergrasp
+        {
+            if (pvpWG->isWarTime())
+            {
+                unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
+                unitTarget->PlayDirectSound(9417); // Fel Reaver sound
+                unitTarget->MonsterTextEmote("The air is too thin in Wintergrasp for normal flight. You will be ejected in 9 sec.",unitTarget->GetGUID(),true);
+                break;
+            }
+            else
+            {
+                // Remove the aura immediately, should not need to happen
+                unitTarget->RemoveAura(58730);
+			          break;
+            }
+        }
+        case 58600: // Restricted Flight Area in Dalaran
+        {
+            unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
+            unitTarget->PlayDirectSound(9417); // Fel Reaver sound
+            unitTarget->MonsterTextEmote("The air over Dalaran is protected. You will be ejected in 9 sec.",unitTarget->GetGUID(),true);
+            break;
+        }
+    }
 }
 
 void Spell::EffectRemoveAura(uint32 i)
