@@ -262,7 +262,7 @@ struct npc_stinkyAI : public ScriptedAI
     ScriptedInstance* m_pInstance;
     uint32 m_uiMortalWoundTimer;
     uint32 m_uiDecimateTimer;
-    uint32 m_uiAwakenPlaguedZomiesTimer;
+    uint32 m_uiPlagueStench;
     uint64 uiFestergut;
     void Reset()
     {
@@ -291,7 +291,6 @@ struct npc_stinkyAI : public ScriptedAI
 
         if (m_uiDecimateTimer <= diff)
         {
-            me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
             Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             DoCast(pTarget, SPELL_DECIMATE);
             m_uiDecimateTimer = 17800;
@@ -307,7 +306,7 @@ struct npc_stinkyAI : public ScriptedAI
     }
     void JustDied(Unit* who)
     {
-        uiFestergut = (m_pInstance ? m_pInstance->GetData64(DATA_FESTERGUT) : 0);
+        uiFestergut = (m_pInstance ? m_pInstance->GetData64(DATA_FESTERGURT) : 0);
         if (Creature *pFestergut = me->GetCreature(*me, uiFestergut))
         DoScriptText(SAY_STINKI_DIES, pFestergut);
         me->PlayDirectSound(16907);
