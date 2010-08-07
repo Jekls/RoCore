@@ -68,8 +68,13 @@ UPDATE creature_template SET ScriptName='npc_vortex_icc' WHERE entry=38422;
 UPDATE creature_template SET ScriptName='npc_empfireball_icc' WHERE entry=38451;
 <<<<<<< HEAD:sql/wow_ro/updates/1_icecrown_citadel.sql
 <<<<<<< HEAD:sql/wow_ro/updates/1_icecrown_citadel.sql
+<<<<<<< HEAD:sql/wow_ro/updates/1_icecrown_citadel.sql
 =======
 UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
+=======
+UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
+UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
+>>>>>>> 1e96d7b80076434fd87075ed3bcf52e2187bbe02:sql/wow_ro/updates/1_icecrown_citadel.sql
 
 -- more scriptnames
 >>>>>>> 9aa96ea0df540b2572caf1fa818d6265ce04728e:sql/wow_ro/updates/1_icecrown_citadel.sql

@@ -549,7 +549,11 @@ struct npc_preciousAI : public ScriptedAI
 
         if (m_uiMortalWoundTimer <= diff)
         {
+<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp
             Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+=======
+            Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+>>>>>>> 1e96d7b80076434fd87075ed3bcf52e2187bbe02:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp
             DoCast(pTarget, SPELL_MORTAL_WOUND);
             m_uiMortalWoundTimer = 10000;
         } else m_uiMortalWoundTimer -= diff;
@@ -557,7 +561,11 @@ struct npc_preciousAI : public ScriptedAI
         if (m_uiDecimateTimer <= diff)
         {
             me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
+<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp
             Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+=======
+            Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+>>>>>>> 1e96d7b80076434fd87075ed3bcf52e2187bbe02:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp
             DoCast(pTarget, SPELL_DECIMATE);
             m_uiDecimateTimer = 17800;
         } else m_uiDecimateTimer -= diff;
