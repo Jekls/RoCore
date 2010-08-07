@@ -66,8 +66,6 @@ UPDATE creature_template SET ScriptName='npc_fireball_icc' WHERE entry=38332;
 UPDATE creature_template SET ScriptName='npc_bomb_icc' WHERE entry=38454;
 UPDATE creature_template SET ScriptName='npc_vortex_icc' WHERE entry=38422;
 UPDATE creature_template SET ScriptName='npc_empfireball_icc' WHERE entry=38451;
-
--- more scriptnames
 UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
 UPDATE `creature_template` SET `ScriptName`='npc_puddle_ooze' WHERE (`entry`='37690');
 UPDATE `creature_template` SET `ScriptName`='npc_malleable_goo' WHERE (`entry`='38556');
@@ -77,8 +75,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_rimefang' WHERE (`entry`='37533
 UPDATE `creature_template` SET `ScriptName`='npc_ice_tomb' WHERE (`entry`='36980');
 UPDATE `creature_template` SET `ScriptName`='npc_frost_bomb' WHERE (`entry`='37186');
 UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror_icc' WHERE (`entry`='37698');
--- icecrown zone
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
+UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
 
 # Other
 UPDATE `creature_template` SET `faction_A` = '35', `faction_H` = '35', `unit_flags` = '8', `type_flags` = '67113038' WHERE `entry` IN(36789,10067,10068,10069);
