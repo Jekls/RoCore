@@ -112,6 +112,7 @@ struct boss_rotfaceAI : public ScriptedAI
     uint32 m_uiBerserkTimer;
     uint32 m_uiLittleOozeTimer;
     uint32 m_uiResetTimer;
+    uint64 uiPutricide;
 
     void Reset()
     {
@@ -120,7 +121,7 @@ struct boss_rotfaceAI : public ScriptedAI
         m_uiMutatedInfectionTimer = 25000;
         m_uiBerserkTimer = 600000;
         m_uiLittleOozeTimer = 30000;
-
+        uiPutricide = 0;
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);
     }
@@ -195,27 +196,33 @@ struct boss_rotfaceAI : public ScriptedAI
 
         if (m_uiFloodTimer <= diff)
         {
+            uiPutricide = (pInstance ? pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
             switch (rand() % 4)
             {
             case 0:
-                DoScriptText(SAY_PUTRI_SLIME, me);
+
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME, pPutricide);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR_X, LR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR2_X, LR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
             case 1:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME, pPutricide);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR_X, UR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR2_X, UR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME, me);
                 break;
             case 2:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL_X, LL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL2_X, LL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME_2, me);
                 break;
             case 3:
+                if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+                DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL2_X, UL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
-                DoScriptText(SAY_PUTRI_SLIME_2, me);
                 break;
             }
             m_uiFloodTimer = 25000;
