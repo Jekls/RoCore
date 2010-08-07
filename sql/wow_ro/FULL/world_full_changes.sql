@@ -242,10 +242,7 @@ UPDATE creature_template SET ScriptName='npc_bomb_icc' WHERE entry=38454;
 UPDATE creature_template SET ScriptName='npc_vortex_icc' WHERE entry=38422;
 UPDATE creature_template SET ScriptName='npc_empfireball_icc' WHERE entry=38451;
 UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
-<<<<<<< HEAD:sql/wow_ro/FULL/world_full_changes.sql
-=======
 UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
->>>>>>> 1e96d7b80076434fd87075ed3bcf52e2187bbe02:sql/wow_ro/FULL/world_full_changes.sql
 
 -- more scriptnames
 UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
