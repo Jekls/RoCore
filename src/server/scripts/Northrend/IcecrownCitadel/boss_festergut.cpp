@@ -55,11 +55,7 @@ enum Spells
     SPELL_PLAGUE_STENCH        =    71161,
 };
 
-enum Achievements
-{
-    ACHIEV_INOCULATE_10 = 4577,
-    ACHIEV_INOCULATE_25 = 4615,
-};
+#define ACHIEV_INOCULATE       = RAID_MODE (4577, 4615)
 
 #define EMOTE_GAS_SPORE "Festergut farts."
 #define EMOTE_Pungent_Blight "Festergut vomits"
@@ -146,7 +142,7 @@ struct boss_festergutAI : public ScriptedAI
             if (victim->HasAura(72103))
             {
                 if(!Achievements)
-                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_25,ACHIEV_INOCULATE_25));
+                m_pInstance->DoCompleteAchievement(ACHIEV_INOCULATE);
                 Achievements = true;
             }
             break;
