@@ -261,9 +261,6 @@ enum WorldConfigs
     CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME,
     CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME,
     CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL,
-	CONFIG_OUTDOORPVP_WINTERGRASP_REQ_PLAYER_LVL,
-	CONFIG_OUTDOORPVP_WINTERGRASP_REQ_PLAYERS_PER_SIDE,
-	CONFIG_OUTDOORPVP_WINTERGRASP_FLYING,
     CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR,
     CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE,
     CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE,
@@ -463,9 +460,8 @@ enum RealmZone
 
 enum WorldStates
 {
-	WS_WEEKLY_QUEST_RESET_TIME      = 20002,                      // Next weekly reset time
-	WS_BG_DAILY_RESET_TIME          = 20003,                       // Next daily BG reset time
-	WS_OPVP_WG_NEXT_BATTLE_TIME     = 30000                       // Next Wintergrasp battle start time
+    WS_WEEKLY_QUEST_RESET_TIME = 20002,                      // Next weekly reset time
+    WS_BG_DAILY_RESET_TIME     = 20003                       // Next daily BG reset time
 };
 
 // DB scripting commands
@@ -705,28 +701,17 @@ class World
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
 
-		    //movement anticheat enable flag
-	     	inline bool GetMvAnticheatEnable()             {return m_MvAnticheatEnable;}
-  		  inline bool GetMvAnticheatKick()               {return m_MvAnticheatKick;}
-	   	  inline uint32 GetMvAnticheatAlarmCount()       {return m_MvAnticheatAlarmCount;}
-	   	  inline uint32 GetMvAnticheatAlarmPeriod()      {return m_MvAnticheatAlarmPeriod;}
-		    inline unsigned char GetMvAnticheatBan()       {return m_MvAntiCheatBan;}
-		    inline std::string GetMvAnticheatBanTime()     {return m_MvAnticheatBanTime;}
-		    inline unsigned char GetMvAnticheatGmLevel()   {return m_MvAnticheatGmLevel;}
-		    inline bool GetMvAnticheatKill()               {return m_MvAnticheatKill;}
-		    inline float GetMvAnticheatMaxXYT()            {return m_MvAnticheatMaxXYT;}
-		    inline uint16 GetMvAnticheatIgnoreAfterTeleport()   {return m_MvAnticheatIgnoreAfterTeleport;}
+        void SetWintergrapsTimer(uint32 timer, uint32 state)
+        {
+            m_WintergrapsTimer = timer;
+            m_WintergrapsState = state;
+        }
 
-		    void SetWintergrapsTimer(uint32 timer, uint32 state)
-		    {
-			     m_WintergrapsTimer = timer;
-			     m_WintergrapsState = state;
-		    }
+        uint32 GetWintergrapsTimer() { return m_WintergrapsTimer; }
+        uint32 GetWintergrapsState() { return m_WintergrapsState; }
 
-		    uint32 GetWintergrapsTimer() { return m_WintergrapsTimer; }
-		    uint32 GetWintergrapsState() { return m_WintergrapsState; }
-
-		    void StartWGBattle();
+        uint32 m_WintergrapsTimer;
+        uint32 m_WintergrapsState;
 
         void ProcessCliCommands();
         void QueueCliCommand(CliCommandHolder* commandHolder) { cliCmdQueue.add(commandHolder); }
@@ -753,11 +738,11 @@ class World
 
         void UpdateAreaDependentAuras();
 
-		    void ProcessStartEvent();
-	    	void ProcessStopEvent();
-		    bool GetEventKill() { return isEventKillStart; }
+     void ProcessStartEvent();
+     void ProcessStopEvent();
+     bool GetEventKill() { return isEventKillStart; }
 
-		    bool isEventKillStart;
+     bool isEventKillStart;
     protected:
         void _UpdateGameTime();
         // callback for UpdateRealmCharacters
@@ -765,15 +750,11 @@ class World
 
         void InitDailyQuestResetTime();
         void InitWeeklyQuestResetTime();
-		    void InitWGNextBattleTime();
-		    void InitRandomBGResetTime();
+        void InitRandomBGResetTime();
         void ResetDailyQuests();
         void ResetWeeklyQuests();
         void ResetRandomBG();
     private:
-		    uint32 m_WintergrapsTimer;
-		    uint32 m_WintergrapsState;
-
         static volatile bool m_stopEvent;
         static uint8 m_ExitCode;
         uint32 m_ShutdownTimer;
@@ -833,18 +814,6 @@ class World
         static int32 m_visibility_notify_periodInInstances;
         static int32 m_visibility_notify_periodInBGArenas;
 
-		    //movement anticheat enable flag
-		    bool m_MvAnticheatEnable;
-		    bool m_MvAnticheatKick;
-		    uint32 m_MvAnticheatAlarmCount;
-		    uint32 m_MvAnticheatAlarmPeriod;
-		    unsigned char m_MvAntiCheatBan;
-		    std::string m_MvAnticheatBanTime;
-	   	  unsigned char m_MvAnticheatGmLevel;
-	     	bool m_MvAnticheatKill;
-		    float m_MvAnticheatMaxXYT;
-		    uint16 m_MvAnticheatIgnoreAfterTeleport;
-
         // CLI command holder to be thread safe
         ACE_Based::LockedQueue<CliCommandHolder*,ACE_Thread_Mutex> cliCmdQueue;
         SqlResultQueue *m_resultQueue;
@@ -853,7 +822,6 @@ class World
         time_t m_NextDailyQuestReset;
         time_t m_NextWeeklyQuestReset;
         time_t m_NextRandomBGReset;
-	    	time_t m_NextWGBattleTime;
 
         //Player Queue
         Queue m_QueuedPlayer;
