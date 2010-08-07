@@ -112,6 +112,8 @@ struct boss_rotfaceAI : public ScriptedAI
     uint32 m_uiLittleOozeTimer;
     uint32 m_uiResetTimer;
     uint64 uiPutricide;
+    uiPutricide = 0;
+    uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
 
     void Reset()
     {
@@ -120,10 +122,8 @@ struct boss_rotfaceAI : public ScriptedAI
         m_uiMutatedInfectionTimer = 25000;
         m_uiBerserkTimer = 600000;
         m_uiLittleOozeTimer = 30000;
-        uiPutricide = 0;
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);
-            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
     }
 
     void JustDied(Unit* pKiller)
