@@ -332,8 +332,8 @@ void AddSC_boss_festergut()
     newscript->GetAI = &GetAI_boss_festergut;
     newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_stinky";
-    NewScript->GetAI = &GetAI_npc_stinky;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_stinky";
+    newscript->GetAI = &GetAI_npc_stinky;
+    newscript->RegisterSelf();
 }
