@@ -146,7 +146,7 @@ struct boss_festergutAI : public ScriptedAI
             if (victim->HasAura(72103))
             {
                 if(!Achievements)
-                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_25));
+                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_10,ACHIEV_INOCULATE_25,ACHIEV_INOCULATE_25));
                 Achievements = true;
             }
             break;

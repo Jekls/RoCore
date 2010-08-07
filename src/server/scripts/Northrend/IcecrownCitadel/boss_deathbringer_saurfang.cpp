@@ -169,7 +169,7 @@ struct boss_saurfangAI : public ScriptedAI
             {
                 DoCast(me, SPELL_FALLEN_CHAMPION_AURA);
                 if(!Achievement)
-                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_MESS_10,ACHIEV_MESS_25));
+                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_MESS_10,ACHIEV_MESS_10,ACHIEV_MESS_25,ACHIEV_MESS_25));
                 Achievement = true;
             }
             break;
