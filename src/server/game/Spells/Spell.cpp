@@ -5588,8 +5588,14 @@ SpellCastResult Spell::CheckCast(bool strict)
                 if (m_originalCaster && m_originalCaster->GetTypeId() == TYPEID_PLAYER && m_originalCaster->isAlive())
                 {
                     if (AreaTableEntry const* pArea = GetAreaEntryByAreaID(m_originalCaster->GetAreaId()))
-                        if ((pArea->flags & AREA_FLAG_NO_FLY_ZONE) || (m_originalCaster->GetZoneId() == 4197 && pvpWG->isWarTime()))
+                        if (pArea->flags & AREA_FLAG_NO_FLY_ZONE && m_originalCaster->GetZoneId() != 4197) //Exlude Wintergrasp for the moment
                             return m_IsTriggeredSpell ? SPELL_FAILED_DONT_REPORT : SPELL_FAILED_NOT_HERE;
+                              // 4197 = Wintergrasp
+                              if (m_originalCaster->GetZoneId() == 4197 && !m_originalCaster->HasAura(58730) && sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_FLYING)==0)
+          						            m_originalCaster->CastSpell(m_originalCaster, 58730, false);
+                              // 4395 = Dalaran && 4564 = Krasus Landing
+          					          if (m_originalCaster->GetZoneId() == 4395 && m_originalCaster->GetAreaId() != 4564 && !m_originalCaster->HasAura(58600))
+          						            m_originalCaster->CastSpell(m_originalCaster, 58600, false);
                 }
                 break;
             }

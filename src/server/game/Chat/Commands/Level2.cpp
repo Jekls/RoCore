@@ -4362,7 +4362,6 @@ bool ChatHandler::HandleWintergraspStartCommand(const char* args)
         return false;
     }
     pvpWG->forceStartBattle();
-    PSendSysMessage(LANG_BG_WG_BATTLE_FORCE_START);
     return true;
 }
 
@@ -4377,7 +4376,6 @@ bool ChatHandler::HandleWintergraspStopCommand(const char* args)
         return false;
     }
     pvpWG->forceStopBattle();
-    PSendSysMessage(LANG_BG_WG_BATTLE_FORCE_STOP);
     return true;
 }
 

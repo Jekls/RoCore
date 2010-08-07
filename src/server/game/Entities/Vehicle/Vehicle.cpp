@@ -245,6 +245,8 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
     {
         if (minion)
             accessory->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
+        
+        accessory->setFaction(me->getFaction());
         accessory->EnterVehicle(this, seatId);
         // This is not good, we have to send update twice
         accessory->SendMovementFlagUpdate();
