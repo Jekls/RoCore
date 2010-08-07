@@ -22909,15 +22909,8 @@ uint8 Player::CanEquipUniqueItem(ItemPrototype const* itemProto, uint8 except_sl
 void Player::HandleFall(MovementInfo const& movementInfo)
 {
     // calculate total z distance of the fall
-<<<<<<< HEAD:src/server/game/Entities/Player/Player.cpp
-    float z_diff = (m_lastFallZ >= m_anti_BeginFallZ ? m_lastFallZ : m_anti_BeginFallZ) - movementInfo.pos.GetPositionZ();
-    
-    m_anti_BeginFallZ=INVALID_HEIGHT;
-=======
     float z_diff = m_lastFallZ - movementInfo.pos.GetPositionZ();
->>>>>>> 42d67be48299bfe370f4a04a527c9787768b71d2:src/server/game/Entities/Player/Player.cpp
     //sLog.outDebug("zDiff = %f", z_diff);
-
     //Players with low fall distance, Feather Fall or physical immunity (charges used) are ignored
     // 14.57 can be calculated by resolving damageperc formula below to 0
     if (z_diff >= 14.57f && !isDead() && !isGameMaster() &&
