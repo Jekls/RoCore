@@ -249,6 +249,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         accessory->EnterVehicle(this, seatId);
         // This is not good, we have to send update twice
         accessory->SendMovementFlagUpdate();
+        accessory->setFaction(me->getFaction());
     }
 }
 
