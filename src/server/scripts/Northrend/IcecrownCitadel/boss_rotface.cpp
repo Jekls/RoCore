@@ -123,10 +123,12 @@ struct boss_rotfaceAI : public ScriptedAI
         uiPutricide = 0;
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, NOT_STARTED);
+            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
     }
 
     void JustDied(Unit* pKiller)
     {
+
         if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
         DoScriptText(SAY_DEATH, me);
         DoScriptText(SAY_DEATH_2, pPutricide);
@@ -197,7 +199,6 @@ struct boss_rotfaceAI : public ScriptedAI
 
         if (m_uiFloodTimer <= diff)
         {
-            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
             switch (rand() % 4)
             {
             case 0:
