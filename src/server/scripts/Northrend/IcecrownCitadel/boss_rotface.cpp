@@ -127,9 +127,8 @@ struct boss_rotfaceAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
-        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
         DoScriptText(SAY_DEATH, me);
+        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
         DoScriptText(SAY_DEATH_2, pPutricide);
         me->PlayDirectSound(17146);
 
