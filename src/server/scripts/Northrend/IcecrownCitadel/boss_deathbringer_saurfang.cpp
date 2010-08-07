@@ -99,8 +99,6 @@ struct boss_saurfangAI : public ScriptedAI
     uint32 m_uiSummonBloodBeastTimer;
     uint32 m_uiBerserkTimer;
 
-    bool Achievement;
-
     void Reset()
     {
         m_uiBoilingBloodTimer    = 15000;
@@ -108,8 +106,6 @@ struct boss_saurfangAI : public ScriptedAI
         m_uiRuneOfBloodTimer = 30000;
         m_uiSummonBloodBeastTimer = 40000;
         m_uiBerserkTimer = 480000;
-
-        Achievement = false;
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_SAURFANG, NOT_STARTED);
@@ -163,9 +159,7 @@ struct boss_saurfangAI : public ScriptedAI
             if (pVictim->HasAura(72293))
             {
                 DoCast(me, SPELL_FALLEN_CHAMPION_AURA);
-                if(!Achievement)
                 m_pInstance->DoCompleteAchievement(ACHIEV_MESS);
-                Achievement = true;
             }
             break;
         }
