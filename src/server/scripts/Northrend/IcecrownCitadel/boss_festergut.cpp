@@ -159,7 +159,6 @@ struct boss_festergutAI : public ScriptedAI
         switch(spell->Id)
         {
         case SPELL_GAS_SPORES:
-            me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
             HandleTouchedSpells(pTarget, SPELL_BLIGHTED_SPORES);
             break;
         }
@@ -229,6 +228,7 @@ struct boss_festergutAI : public ScriptedAI
                 if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
                     {
                         DoCast(pTarget, SPELL_GAS_SPORES);
+                        me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
                     }
                 m_uiGasSporesTimer = 23000;
             } else m_uiGasSporesTimer -= uiDiff;
