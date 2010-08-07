@@ -227,10 +227,7 @@ struct boss_festergutAI : public ScriptedAI
                 if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
                     {
                         DoCast(pTarget, SPELL_GAS_SPORES);
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-=======
                         me->PlayDirectSound(16911);
->>>>>>> 6e2f7fc829bcac88c010e5b6222d20bfcb27d245:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
                         me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
                     }
                 m_uiGasSporesTimer = 23000;
