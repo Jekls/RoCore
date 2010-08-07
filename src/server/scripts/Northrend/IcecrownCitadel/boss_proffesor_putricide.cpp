@@ -23,15 +23,15 @@
 
 enum Yells
 {
-    SAY_AGGRO        =    -1666025,
-    SAY_AIRLOCK      =    -1666026,
-    SAY_PHASE_HC     =    -1666027, 	
-    SAY_TRANSFORM_1  =    -1666028,	
-    SAY_TRANSFORM_2  =    -1666029,
-    SAY_KILL_1       =    -1666030,
-    SAY_KILL_2       =    -1666031,
-    SAY_BERSERK      =    -1666032,
-    SAY_DEATH        =    -1666033,
+    SAY_AGGRO        =    -1666026,
+    SAY_AIRLOCK      =    -1666027,
+    SAY_PHASE_HC     =    -1666028, 	
+    SAY_TRANSFORM_1  =    -1666029,	
+    SAY_TRANSFORM_2  =    -1666030,
+    SAY_KILL_1       =    -1666031,
+    SAY_KILL_2       =    -1666032,
+    SAY_BERSERK      =    -1666033,
+    SAY_DEATH        =    -1666034,
 };
 
 enum ProfessorSpells
