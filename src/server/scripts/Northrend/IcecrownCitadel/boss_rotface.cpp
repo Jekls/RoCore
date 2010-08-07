@@ -102,7 +102,6 @@ struct boss_rotfaceAI : public ScriptedAI
     {
         m_pInstance = pCreature->GetInstanceData();
     }
-    uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
     ScriptedInstance* m_pInstance;
     SummonList summons;
 
@@ -198,6 +197,7 @@ struct boss_rotfaceAI : public ScriptedAI
 
         if (m_uiFloodTimer <= diff)
         {
+            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
             switch (rand() % 4)
             {
             case 0:
