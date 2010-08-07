@@ -78,12 +78,7 @@ enum SaurfangSpells
     SPELL_AGONY                   = 70572,
     SPELL_ZERO_POWER              = 72242,
 };
-
-enum Achievements
-{
-    ACHIEV_MESS_10               = 4537,
-    ACHIEV_MESS_25               = 4613,
-};
+#define ACHIEV_MESS      = RAID_MODE(4537, 4613)
 
 Creature* pSaurfang;
 
@@ -169,7 +164,7 @@ struct boss_saurfangAI : public ScriptedAI
             {
                 DoCast(me, SPELL_FALLEN_CHAMPION_AURA);
                 if(!Achievement)
-                m_pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_MESS_10,ACHIEV_MESS_25));
+                m_pInstance->DoCompleteAchievement(ACHIEV_MESS);
                 Achievement = true;
             }
             break;
