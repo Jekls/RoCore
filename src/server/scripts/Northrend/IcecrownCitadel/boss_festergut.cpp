@@ -55,7 +55,7 @@ enum Spells
     SPELL_PLAGUE_STENCH        =    71161,
 };
 
-#define ACHIEV_INOCULATE       = RAID_MODE (4577, 4615)
+#define ACHIEV_INOCULATE       RAID_MODE (4577, 4615)
 
 #define EMOTE_GAS_SPORE "Festergut farts."
 #define EMOTE_Pungent_Blight "Festergut vomits"
