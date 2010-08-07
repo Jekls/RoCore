@@ -284,14 +284,14 @@ struct npc_stinkyAI : public ScriptedAI
 
         if (m_uiMortalWoundTimer <= diff)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
             DoCast(pTarget, SPELL_MORTAL_WOUND);
             m_uiMortalWoundTimer = 10000;
         } else m_uiMortalWoundTimer -= diff;
 
         if (m_uiDecimateTimer <= diff)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
             DoCast(pTarget, SPELL_DECIMATE);
             m_uiDecimateTimer = 17800;
         } else m_uiDecimateTimer -= diff;
