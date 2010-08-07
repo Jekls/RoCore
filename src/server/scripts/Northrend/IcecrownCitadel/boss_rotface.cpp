@@ -33,6 +33,7 @@ enum Yells
     SAY_BERSERK                = -1666023,
     SAY_SLIME_SPRAY            = -1666017,
     SAY_EXPLOSION              = -1666018,
+    SAY_PRECIOUS               = -1666015,
 };
 
 enum Creatures
@@ -65,6 +66,9 @@ enum Spells
     SPELL_UNSTABLE_OOZE        = 69558,
     SPELL_UNSTABLE_EXPLOSION   = 71209,
     SPELL_MERGE_OOZE           = 69889,
+    SPELL_MORTAL_WOUND         = 71159,
+    SPELL_DECIMATE             = 71123,
+    SPELL_AWAKEN_PLAGUED_ZOMBIES = 71159,
 };
 
 Creature* pBigooze;
@@ -95,6 +99,7 @@ Creature* pLittleooze;
 
 #define EMOTE_BIG_OOZE "Big Ooze can barely maintain its form!"
 #define EMOTE_SLIME_SPRAY "Rotface begins to cast Slime Spray!"
+#define EMOTE_DECIMATE "Precious cries out with a loud, baying howl!"
 
 struct boss_rotfaceAI : public ScriptedAI
 {
@@ -513,6 +518,68 @@ struct npc_flood_oozeAI : public ScriptedAI
     }
 };
 
+struct npc_preciousAI : public ScriptedAI
+{
+    npc_preciousAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = pCreature->GetInstanceData();
+    }
+    ScriptedInstance* m_pInstance;
+    uint32 m_uiMortalWoundTimer;
+    uint32 m_uiDecimateTimer;
+    uint32 m_uiAwakenPlaguedZomiesTimer;
+    uint64 uiRotface;
+    void Reset()
+    {
+   m_uiMortalWoundTimer          = 1500;
+   m_uiDecimateTimer             = 23000;
+   m_uiAwakenPlaguedZomiesTimer  = 46000;
+   uiRotface = 0;
+
+    }
+
+    void EnterCombat(Unit* who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!UpdateVictim())
+            return;
+
+        if (m_uiMortalWoundTimer <= diff)
+        {
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            DoCast(pTarget, SPELL_MORTAL_WOUND);
+            m_uiMortalWoundTimer = 10000;
+        } else m_uiMortalWoundTimer -= diff;
+
+        if (m_uiDecimateTimer <= diff)
+        {
+            me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            DoCast(pTarget, SPELL_DECIMATE);
+            m_uiDecimateTimer = 17800;
+        } else m_uiDecimateTimer -= diff;
+
+        if (m_uiAwakenPlaguedZomiesTimer<= diff)
+        {
+            DoCast(me, SPELL_AWAKEN_PLAGUED_ZOMBIES);
+            m_uiAwakenPlaguedZomiesTimer = 12000;
+        } else m_uiAwakenPlaguedZomiesTimer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+    void JustDied(Unit* who)
+    {
+        uiRotface = (pInstance ? pInstance->GetData64(DATA_ROTFACE) : 0);
+        if (Creature *pRotface = me->GetCreature(*me, uiRotface))
+        DoScriptText(SAY_PRECIOUS, pRotface);
+        me->PlayDirectSound(16993);
+    }
+};
+
+
 CreatureAI* GetAI_boss_rotface(Creature* pCreature)
 {
     return new boss_rotfaceAI(pCreature);
@@ -535,6 +602,10 @@ CreatureAI* GetAI_npc_sticky_ooze(Creature* pCreature)
 CreatureAI* GetAI_npc_flood_ooze(Creature* pCreature)
 {
     return new npc_flood_oozeAI(pCreature);
+}
+CreatureAI* GetAI_precious(Creature* pCreature)
+{
+    return new npc_preciousAI(pCreature);
 }
 void AddSC_boss_rotface()
 {
@@ -563,5 +634,10 @@ void AddSC_boss_rotface()
     NewScript = new Script;
     NewScript->Name = "npc_flood_ooze";
     NewScript->GetAI = &GetAI_npc_flood_ooze;
+    NewScript->RegisterSelf();
+
+    NewScript = new Script;
+    NewScript->Name = "npc_precious";
+    NewScript->GetAI = &GetAI_npc_precious;
     NewScript->RegisterSelf();
 }
