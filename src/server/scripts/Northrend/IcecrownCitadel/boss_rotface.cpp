@@ -102,7 +102,7 @@ struct boss_rotfaceAI : public ScriptedAI
     {
         m_pInstance = pCreature->GetInstanceData();
     }
-
+    uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
     ScriptedInstance* m_pInstance;
     SummonList summons;
 
@@ -128,8 +128,10 @@ struct boss_rotfaceAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
+        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
         DoScriptText(SAY_DEATH, me);
-        DoScriptText(SAY_DEATH_2, me);
+        DoScriptText(SAY_DEATH_2, pPutricide);
+        me->PlayDirectSound(17146);
 
         if(m_pInstance)
             m_pInstance->SetData(DATA_ROTFACE_EVENT, DONE);
@@ -196,31 +198,34 @@ struct boss_rotfaceAI : public ScriptedAI
 
         if (m_uiFloodTimer <= diff)
         {
-            uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
             switch (rand() % 4)
             {
             case 0:
 
                 if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
                 DoScriptText(SAY_PUTRI_SLIME, pPutricide);
+                me->PlayDirectSound(17126);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR_X, LR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LR2_X, LR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
             case 1:
                 if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
                 DoScriptText(SAY_PUTRI_SLIME, pPutricide);
+                me->PlayDirectSound(17126);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR_X, UR_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UR2_X, UR2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
             case 2:
                 if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
                 DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
+                me->PlayDirectSound(17123);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL_X, LL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, LL2_X, LL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
             case 3:
                 if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
                 DoScriptText(SAY_PUTRI_SLIME_2, pPutricide);
+                me->PlayDirectSound(17123);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL_X, UL_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 me->SummonCreature(CREATURE_PUDDLE_STALKER, UL2_X, UL2_Y, SPAWN_Z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 24000);
                 break;
