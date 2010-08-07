@@ -33,7 +33,7 @@ enum Yells
     SAY_KILL_2              =    -1666011,
     SAY_BERSERK             =    -1666012,
     SAY_DEATH_1             =    -1666013,
-    SAY_DEATH_2             =    -1666014,
+    SAY_PUTRICIDE_DEATH     =    -1666014,
 };
 
 enum Spells
@@ -50,6 +50,9 @@ enum Spells
     SPELL_BERSERK              =    47008,
     SPELL_INOCULATED           =    72103,
     SPELL_BLIGHTED_SPORES      =    69290,
+    SPELL_MORTAL_WOUND         =    71127,
+    SPELL_DECIMATE             =    71123,
+    SPELL_PLAGUE_STENCH        =    71161,
 };
 
 enum Achievements
@@ -57,6 +60,9 @@ enum Achievements
     ACHIEV_INOCULATE_10 = 4577,
     ACHIEV_INOCULATE_25 = 4615,
 };
+
+#define EMOTE_GAS_SPORE "Festergut farts."
+#define EMOTE_Pungent_Blight "Festergut vomits"
 
 struct boss_festergutAI : public ScriptedAI
 {
@@ -75,6 +81,7 @@ struct boss_festergutAI : public ScriptedAI
     uint32 m_uiGastricBloatTimer;
     uint32 m_uiBerserkTimer;
     uint32 m_uiGastricBoom;
+    uint64 uiPutricide;
 
     bool Achievements;
 
@@ -87,6 +94,7 @@ struct boss_festergutAI : public ScriptedAI
         m_uiGastricBloatTimer = 15000;
         m_uiBerserkTimer = 300000;
         m_uiGastricBoom = 20000;
+        uiPutricide = 0;
 
         Achievements = false;
 
@@ -105,6 +113,10 @@ struct boss_festergutAI : public ScriptedAI
     void JustDied(Unit* pKiller)
     {
         DoScriptText(SAY_DEATH_1, me);
+        uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
+        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
+        DoScriptText(SAY_PUTRICIDE_DEATH, pPutricide);
+        me->PlayDirectSound(17124);
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
@@ -147,6 +159,7 @@ struct boss_festergutAI : public ScriptedAI
         switch(spell->Id)
         {
         case SPELL_GAS_SPORES:
+            me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
             HandleTouchedSpells(pTarget, SPELL_BLIGHTED_SPORES);
             break;
         }
@@ -223,6 +236,7 @@ struct boss_festergutAI : public ScriptedAI
 
         if (m_uiPungentBlightTimer < uiDiff)
         {
+            me->MonsterTextEmote(EMOTE_Pungent_Blight, 0, true);
             DoCastAOE(SPELL_PUNGENT_BLIGHT);
             m_uiPungentBlightTimer = 120000;
             m_uiInhaleBlightTimer = 33000;
@@ -239,9 +253,75 @@ struct boss_festergutAI : public ScriptedAI
     }
 };
 
+struct npc_stinkyAI : public ScriptedAI
+{
+    npc_stinkyAI(Creature *pCreature) : ScriptedAI(pCreature)
+    {
+        m_pInstance = pCreature->GetInstanceData();
+    }
+    ScriptedInstance* m_pInstance;
+    uint32 m_uiMortalWoundTimer;
+    uint32 m_uiDecimateTimer;
+    uint32 m_uiAwakenPlaguedZomiesTimer;
+    uint64 uiFestergut;
+    void Reset()
+    {
+   m_uiMortalWoundTimer          = 1500;
+   m_uiDecimateTimer             = 23000;
+   m_uiPlagueStench              = 46000;
+   uiFestergut = 0;
+
+    }
+
+    void EnterCombat(Unit* who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!UpdateVictim())
+            return;
+
+        if (m_uiMortalWoundTimer <= diff)
+        {
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            DoCast(pTarget, SPELL_MORTAL_WOUND);
+            m_uiMortalWoundTimer = 10000;
+        } else m_uiMortalWoundTimer -= diff;
+
+        if (m_uiDecimateTimer <= diff)
+        {
+            me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            DoCast(pTarget, SPELL_DECIMATE);
+            m_uiDecimateTimer = 17800;
+        } else m_uiDecimateTimer -= diff;
+
+        if (m_uiPlagueStench<= diff)
+        {
+            DoCastAOE(SPELL_PLAGUE_STENCH);
+            m_uiPlagueStench = 12000;
+        } else m_uiPlagueStench -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+    void JustDied(Unit* who)
+    {
+        uiFestergut = (m_pInstance ? m_pInstance->GetData64(DATA_FESTERGUT) : 0);
+        if (Creature *pFestergut = me->GetCreature(*me, uiFestergut))
+        DoScriptText(SAY_STINKI_DIES, pFestergut);
+        me->PlayDirectSound(16907);
+    }
+};
+
 CreatureAI* GetAI_boss_festergut(Creature* pCreature)
 {
     return new boss_festergutAI(pCreature);
+}
+
+CreatureAI* GetAI_npc_stinky(Creature* pCreature)
+{
+    return new npc_stinkyAI(pCreature);
 }
 
 void AddSC_boss_festergut()
@@ -252,4 +332,9 @@ void AddSC_boss_festergut()
     newscript->Name = "boss_festergut";
     newscript->GetAI = &GetAI_boss_festergut;
     newscript->RegisterSelf();
+
+    NewScript = new Script;
+    NewScript->Name = "npc_stinky";
+    NewScript->GetAI = &GetAI_npc_stinky;
+    NewScript->RegisterSelf();
 }
