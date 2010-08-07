@@ -222,7 +222,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
                 }
                 
                 //checking if damage should be deald
-                if (!i->getSource()->GetDistance2d(me) > 12)
+                if (i->getSource()->GetDistance2d(me) <= 12)
                 {                
                     //calculating the amount of absorbed and rested damage
                     i->getSource()->CalcAbsorbResist(i->getSource(),SPELL_SCHOOL_MASK_NORMAL, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
