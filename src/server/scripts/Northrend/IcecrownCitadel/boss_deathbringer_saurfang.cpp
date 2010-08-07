@@ -78,7 +78,7 @@ enum SaurfangSpells
     SPELL_AGONY                   = 70572,
     SPELL_ZERO_POWER              = 72242,
 };
-#define ACHIEV_MESS      = RAID_MODE(4537, 4613)
+#define ACHIEV_MESS       RAID_MODE(4537, 4613)
 
 Creature* pSaurfang;
 
