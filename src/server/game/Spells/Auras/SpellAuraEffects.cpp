@@ -1857,15 +1857,15 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                     target->RemoveAurasDueToSpell(58670);
                 break;
             case 58730: // No Fly Zone - Wintergrasp
-				      {
-			           if (pvpWG->isWarTime()==false) break;
-                    if (GetTickNumber() == 10)
-                    {
-                      target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
-                      target->RemoveAurasByType(SPELL_AURA_FLY);
-                    }
+				{
+			    if (pvpWG->isWarTime()==false) break;
+                if (GetTickNumber() == 10)
+                {
+                    target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
+                    target->RemoveAurasByType(SPELL_AURA_FLY);
+                }
                 break;
-				      }
+				}
             case 62292: // Blaze (Pool of Tar)
                 // should we use custom damage?
                 target->CastSpell((Unit*)NULL, m_spellProto->EffectTriggerSpell[m_effIndex], true);
@@ -3668,15 +3668,9 @@ void AuraEffect::HandleAuraAllowFlight(AuraApplication const * aurApp, uint8 mod
         // allow fly
         WorldPacket data;
         if (apply)
-        {
-            ((Player*)target)->SetCanFly(true);
             data.Initialize(SMSG_MOVE_SET_CAN_FLY, 12);
-        }
         else
-        {
             data.Initialize(SMSG_MOVE_UNSET_CAN_FLY, 12);
-            ((Player*)target)->SetCanFly(false);
-        }
         data.append(target->GetPackGUID());
         data << uint32(0);                                      // unk
         plr->SendDirectMessage(&data);
@@ -4085,15 +4079,9 @@ void AuraEffect::HandleAuraModIncreaseFlightSpeed(AuraApplication const * aurApp
             {
                 WorldPacket data;
                 if (apply)
-                {
-                	  ((Player*)target)->SetCanFly(true);
                     data.Initialize(SMSG_MOVE_SET_CAN_FLY, 12);
-                }
                 else
-                {
                     data.Initialize(SMSG_MOVE_UNSET_CAN_FLY, 12);
-                    ((Player*)target)->SetCanFly(false);
-                }
                 data.append(plr->GetPackGUID());
                 data << uint32(0);                                      // unknown
                 plr->SendDirectMessage(&data);
@@ -5711,37 +5699,28 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                 case SPELLFAMILY_GENERIC:
                     switch(GetId())
                     {
-                        case 58600: // Restricted Flight Area
+		      case 58600: // Restricted Flight Area
                         {
-                            if (!target || target->GetAreaId() != 4395)
-                                break;
-
-                            // Remove Flight Auras
-                            if(target->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) || target->HasAuraType(SPELL_AURA_FLY))
-                            {
-                                target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
+				if (!target || target->GetAreaId() != 4395) break;
+                      // Remove Flight Auras
+				target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
                                 target->RemoveAurasByType(SPELL_AURA_FLY);
                                 target->CastSpell(target, 61286, true);
-                                // Parachute
+                      // Parachute
                                 target->CastSpell(target, 45472, true);
-                            }
-                            break;
-                        }
-                        case 58730: // Restricted Flight Area
-                        {
-                            if (!target || (pvpWG->isWarTime() == false) || ((target->GetAreaId() != 4581) && (target->GetAreaId() != 4539) && (target->GetAreaId() != 4197) && (target->GetAreaId() != 4585) && (target->GetAreaId() != 4612) && (target->GetAreaId() != 4582) && (target->GetAreaId() != 4583) && (target->GetAreaId() != 4589) && (target->GetAreaId() != 4575) && (target->GetAreaId() != 4538) && (target->GetAreaId() != 4577)))
                                 break;
-                            // Remove Flight Auras
-                            if(target->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) || target->HasAuraType(SPELL_AURA_FLY))
-                            {
-                                target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
+                        } 
+		      case 58730: // Restricted Flight Area
+                        {
+				if (!target || (pvpWG->isWarTime()==false) || ((target->GetAreaId() != 4581) && (target->GetAreaId() != 4539) && (target->GetAreaId() != 4197) && (target->GetAreaId() != 4585) && (target->GetAreaId() != 4612) && (target->GetAreaId() != 4582) && (target->GetAreaId() != 4583) && (target->GetAreaId() != 4589) && (target->GetAreaId() != 4575) && (target->GetAreaId() != 4538) && (target->GetAreaId() != 4577))) break;
+                      // Remove Flight Auras
+				target->RemoveAurasByType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED);
                                 target->RemoveAurasByType(SPELL_AURA_FLY);
                                 target->CastSpell(target, 61286, true);
-                                // Parachute
+                      // Parachute
                                 target->CastSpell(target, 45472, true);
-                            }
-                            break;
-                        }
+                                break;
+                        } 
                         case 2584: // Waiting to Resurrect
                             // Waiting to resurrect spell cancel, we must remove player from resurrect queue
                             if (target->GetTypeId() == TYPEID_PLAYER)
